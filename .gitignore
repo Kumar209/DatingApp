@@ -1,0 +1,124 @@
+# =========================
+# Build output
+# =========================
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+build/
+out/
+publish/
+
+# =========================
+# Visual Studio
+# =========================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.VC.db
+*.VC.VC.opendb
+
+# =========================
+# Rider / JetBrains
+# =========================
+.idea/
+*.sln.iml
+_ReSharper*/
+*.DotSettings.user
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# NuGet
+# =========================
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+log/
+
+# =========================
+# Test artifacts
+# =========================
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+# =========================
+# EF Core / Local databases
+# =========================
+*.mdf
+*.ldf
+*.db
+*.db-shm
+*.db-wal
+
+# =========================
+# App settings / secrets
+# =========================
+appsettings.json
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+.env
+.env.*
+
+# =========================
+# IIS / IIS Express
+# =========================
+applicationhost.config
+wwwroot/uploads/
+wwwroot/temp/
+
+# =========================
+# Azure publish settings
+# =========================
+*.publishsettings
+*.pubxml
+*.pubxml.user
+
+# =========================
+# Generated files
+# =========================
+Generated/
+Generated_Code/
+ScaffoldingReadMe.txt
+
+# =========================
+# Backup / temp files
+# =========================
+*.bak
+*.backup
+*.tmp
+*.temp
+*.old
+*.orig
+
+# =========================
+# SQL scripts (optional)
+# =========================
+*.sql
+
+# =========================
+# OS files
+# =========================
+Thumbs.db
+Desktop.ini
+.DS_Store
