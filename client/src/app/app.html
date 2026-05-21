@@ -1,0 +1,9 @@
+<h1>{{title()}}<h1>
+
+<button class="btn btn-secondary">Secondary</button>
+
+<ul>
+    @for(member of members(); track member.id){
+        <li> {{ member.id }} - {{ member.displayName }}</li>
+    }
+</ul>
