@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Nav } from "../layout/nav/nav";
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { AccountService } from '../core/services/account-service';
 
 @Component({
   selector: 'app-root',
@@ -11,21 +12,28 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App implements OnInit {
   private http = inject(HttpClient);
-  protected readonly title = signal('Dating App');
+  protected router = inject(Router);
+  private accountService = inject(AccountService);
+
+  protected readonly title = signal('Valentra');
 
   protected members = signal<Member[]>([]);
 
+  protected hideNavRoutes = ['/auth/login', '/auth/register'];
+
+  protected get showNav(): boolean {
+    return !this.hideNavRoutes.includes(this.router.url);
+  }
+
   ngOnInit(): void {
-    console.log(1);
     this.getMembers();
-    console.log(3);
+    this.accountService.loadCurrentUser();
   }
 
   async getMembers(){
     await this.http.get<Member[]>("https://localhost:7174/api/Members/getmembers").subscribe({
       next: (response) => {
         this.members.set(response);
-        console.log(2);
       },
       error: (error) => console.log(error),
       complete: () => console.log("Request completed")

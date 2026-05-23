@@ -1,7 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { AccountService } from '../../../core/services/account-service';
+import { LoginCreds } from '../../../types/user';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +12,14 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.css'
 })
 export class Login {
+  private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  private router = inject(Router);
 
   protected isPending = signal(false);
   protected errorMessage = signal('');
+   protected showPassword = signal(false);
 
   protected loginForm = this.fb.group({
     email: [
@@ -33,6 +38,10 @@ export class Login {
     ]
   });
 
+  togglePasswordVisibility() {
+    this.showPassword.update(value => !value);
+  }
+
   login() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -41,19 +50,29 @@ export class Login {
 
     this.isPending.set(true);
     this.errorMessage.set('');
+ 
+    const { email, password } = this.loginForm.getRawValue();
 
-    this.http.post('https://reqres.in/api/login', {
-      email: this.loginForm.value.email,
-      password: this.loginForm.value.password
-    }).subscribe({
+    const loginCreds: LoginCreds = {
+      email: email!,
+      password: password!
+    };
+
+    this.accountService.login(loginCreds).subscribe({
       next: (response) => {
         console.log('Login success:', response);
+
         this.isPending.set(false);
+        this.router.navigateByUrl('/');
       },
+
       error: (error) => {
+        console.log(error)
+
         this.errorMessage.set(
-          error?.error?.error || 'Login failed'
+          error?.error || 'Login failed'
         );
+
         this.isPending.set(false);
       }
     });

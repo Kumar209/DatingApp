@@ -1,0 +1,167 @@
+<div class="relative min-h-screen w-full  bg-base-200 overflow-x-hidden">
+  <!-- background -->
+  <div
+    class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(var(--p)/0.06)_0%,transparent_35%),radial-gradient(circle_at_bottom_right,oklch(var(--s)/0.05)_0%,transparent_35%)]"
+  ></div>
+
+  <section
+    class="relative z-10 flex min-h-[calc(100vh-80px)] w-full items-center justify-center px-4 pt-24 pb-10 sm:px-6 lg:h-[calc(100vh-80px)] lg:px-8 lg:pt-0 lg:pb-0"
+  >
+    <div
+      class="grid w-full max-w-[1250px] grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20"
+    >
+      <!-- LEFT -->
+      <div class="max-w-lg text-center lg:ml-10 lg:text-left">
+        <div
+          class="badge badge-primary badge-outline mb-4 gap-2 px-3 py-2 text-[11px] font-medium"
+        >
+          ✨ Trusted meaningful connections
+        </div>
+
+        <h1
+          class="text-base-content text-4xl font-extrabold leading-tight sm:text-5xl lg:text-5xl"
+        >
+          Find your
+          <span class="text-primary block">
+            meaningful match
+          </span>
+          on Valentra
+        </h1>
+
+        <p
+          class="text-base-content/70 mt-5 max-w-md text-sm leading-relaxed sm:text-base"
+        >
+          Meet genuine people, build real conversations, and discover
+          meaningful relationships in a modern secure dating experience
+          designed for connection—not endless swiping.
+        </p>
+
+        <div
+          class="mt-6 flex flex-col items-center gap-3 sm:flex-row lg:items-start"
+        >
+          @if (!accountService.currentUser()) {
+            <button
+              routerLink="/auth/register"
+              class="btn btn-primary h-11 min-w-[190px] rounded-xl px-5 text-sm font-semibold shadow-md"
+            >
+              Start Your Journey
+            </button>
+          }
+
+          @if (accountService.currentUser()) {
+            <button
+              routerLink="/matches"
+              class="btn btn-primary h-11 min-w-[150px] rounded-xl px-5 text-sm font-semibold shadow-md"
+            >
+              Explore Now
+            </button>
+          }
+        </div>
+
+        <!-- stats -->
+        <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div
+            class="rounded-xl border border-base-300 bg-base-100/80 p-4 shadow-sm"
+          >
+            <h3 class="text-primary text-lg font-bold">10K+</h3>
+            <p class="text-base-content/70 text-xs">
+              Active users
+            </p>
+          </div>
+
+          <div
+            class="rounded-xl border border-base-300 bg-base-100/80 p-4 shadow-sm"
+          >
+            <h3 class="text-primary text-lg font-bold">2K+</h3>
+            <p class="text-base-content/70 text-xs">
+              Successful matches
+            </p>
+          </div>
+
+          <div
+            class="rounded-xl border border-base-300 bg-base-100/80 p-4 shadow-sm"
+          >
+            <h3 class="text-primary text-lg font-bold">100%</h3>
+            <p class="text-base-content/70 text-xs">
+              Privacy focused
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="relative mx-auto w-full max-w-[320px] sm:max-w-[360px]">
+        <!-- main mock card -->
+        <div
+          class="rounded-3xl border border-base-300 bg-base-100 p-4 shadow-2xl"
+        >
+          <!-- mock image -->
+          <div class="relative overflow-hidden rounded-2xl">
+            <img
+              src="/sophia.jpg"
+              alt="Dating mock"
+              class="h-[280px] w-full object-cover sm:h-[340px]"
+            />
+
+            <!-- overlay -->
+            <div
+              class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4"
+            >
+              <h3 class="text-lg font-bold text-white">
+                Sophia, 27
+              </h3>
+
+              <p class="text-xs text-white/80">
+                New Delhi • Designer • Coffee lover
+              </p>
+            </div>
+          </div>
+
+          <!-- actions -->
+          <div class="mt-4 flex justify-start gap-3">
+            <button class="btn btn-circle btn-outline btn-sm">
+              ✕
+            </button>
+
+            <button
+              class="btn btn-primary btn-circle btn-sm shadow-md"
+            >
+              ❤
+            </button>
+          </div>
+        </div>
+
+        <!-- floating card desktop only -->
+        <div
+          class="absolute -bottom-11 left-[75%] hidden w-60 -translate-x-1/2 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-2xl lg:block"
+        >
+          <p class="text-base-content text-sm font-semibold">
+            💬 New match found
+          </p>
+
+          <p class="text-base-content/60 mt-1 text-xs">
+            Start a meaningful conversation now.
+          </p>
+        </div>
+
+        <!-- mobile card -->
+        <div
+          class="mt-4 rounded-2xl border border-base-300 bg-base-100 p-4 shadow-xl lg:hidden"
+        >
+          <p class="text-base-content text-sm font-semibold">
+            💬 New match found
+          </p>
+
+          <p class="text-base-content/60 mt-1 text-xs">
+            Start a meaningful conversation now.
+          </p>
+        </div>
+
+        <!-- glow -->
+        <div
+          class="bg-primary/15 absolute inset-0 -z-10 blur-3xl"
+        ></div>
+      </div>
+    </div>
+  </section>
+</div>

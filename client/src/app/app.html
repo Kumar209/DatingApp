@@ -1,15 +1,26 @@
-<!-- <app-nav />
+@if (showNav) {
+  <app-nav />
+}
 
-<div class="card bg--base-100 w-1/2 mx-auto p-10 mask-conic-to-24 shadow-xl">
-    <h3 class="text-3xl text-red-500">{{title()}}</h3>
-    <ul class="list">
-        @for (member of members(); track member.id) {
-            <li class="list-row items-center">
-                <img src="/user.png" alt="user avatar" class="size-12 rounded-box">
-                <div class="ml-4">{{ member.displayName }}</div>
-            </li>
-        }
-    </ul>
+<!-- <div
+  [class.mt-24]="showNav"
+  [class.container]="showNav"
+  [class.mx-auto]="showNav"
+  [class.px-4]="showNav"
+>
+
+  <router-outlet />
 </div> -->
 
-<router-outlet />
+<div
+  [class.mt-16]="showNav"
+>
+
+  <router-outlet />
+
+</div>
+
+
+
+
+<!-- <app-confirm-dialog /> -->

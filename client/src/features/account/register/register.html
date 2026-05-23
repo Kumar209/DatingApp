@@ -1,1 +1,445 @@
-<p>register works!</p>
+<div class="w-full max-w-[650px]">
+  <!-- Brand -->
+  <div class="mb-6 flex items-center justify-center gap-4">
+    <img
+      src="/logo.png"
+      alt="Velentra Logo"
+      class="h-16 w-16 object-contain drop-shadow-xl"
+    />
+
+    <div>
+      <h1 class="text-base-content text-[1.35rem] font-bold tracking-tight">
+        VELENTRA
+      </h1>
+      <p class="text-base-content/60 mt-1 text-[11px] font-medium">
+        Trusted meaningful connections
+      </p>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div
+    class="w-full rounded-3xl border border-base-300 bg-base-100/90 shadow-2xl backdrop-blur-xl"
+  >
+    <div class="card-body p-6 lg:p-8">
+      <!-- Heading -->
+      <div class="mb-5 text-center">
+        <h2 class="text-base-content text-2xl font-bold">
+          Create account
+        </h2>
+        <p class="text-base-content/60 mt-2 text-sm">
+          Start your meaningful journey
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="mb-6 flex items-center justify-center">
+        <div class="flex flex-col items-center gap-2">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold"
+            [class.bg-primary]="currentStep() === 1"
+            [class.text-primary-content]="currentStep() === 1"
+            [class.shadow-lg]="currentStep() === 1"
+            [class.bg-base-300]="currentStep() !== 1"
+            [class.text-base-content/60]="currentStep() !== 1"
+          >
+            1
+          </div>
+          <span class="text-base-content/70 text-xs font-semibold">
+            Credentials
+          </span>
+        </div>
+
+        <div
+          class="mx-4 h-[2px] w-28"
+          [class.bg-primary]="currentStep() === 2"
+          [class.bg-base-300]="currentStep() === 1"
+        ></div>
+
+        <div class="flex flex-col items-center gap-2">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold"
+            [class.bg-primary]="currentStep() === 2"
+            [class.text-primary-content]="currentStep() === 2"
+            [class.shadow-lg]="currentStep() === 2"
+            [class.bg-base-300]="currentStep() !== 2"
+            [class.text-base-content/60]="currentStep() !== 2"
+          >
+            2
+          </div>
+          <span class="text-base-content/70 text-xs font-semibold">
+            Profile
+          </span>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      @if (currentStep() === 1) {
+      <form [formGroup]="credentialsForm" class="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <!-- EMAIL -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Email</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <input
+            autofocus
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+            class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 text-sm focus:input-primary"
+          />
+
+          @if (
+            credentialsForm.get('email')?.touched &&
+            credentialsForm.get('email')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Email is required
+          </p>
+          }
+
+          @if (
+            credentialsForm.get('email')?.touched &&
+            credentialsForm.get('email')?.hasError('email')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Invalid email address
+          </p>
+          }
+        </div>
+
+        <!-- DISPLAY NAME -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Display Name</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <input
+            type="text"
+            formControlName="displayName"
+            placeholder="Your display name"
+            class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 text-sm focus:input-primary"
+          />
+
+          @if (
+            credentialsForm.get('displayName')?.touched &&
+            credentialsForm.get('displayName')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Display name is required
+          </p>
+          }
+
+          @if (
+            credentialsForm.get('displayName')?.touched &&
+            credentialsForm.get('displayName')?.hasError('minlength')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Minimum 2 characters required
+          </p>
+          }
+        </div>
+
+        <!-- PASSWORD -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Password</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <div class="relative">
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+              class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 pr-12 text-sm focus:input-primary"
+            />
+
+            <button
+              type="button"
+              tabindex="-1"
+              class="text-base-content/60 hover:text-primary absolute top-1/2 right-4 -translate-y-1/2"
+              (click)="togglePasswordVisibility()"
+            >
+              @if (!showPassword()) {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/>
+                <circle cx="12" cy="12" r="3" stroke-width="1.8"/>
+              </svg>
+              }
+
+              @if (showPassword()) {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4l16 16"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.6 10.7a3 3 0 004.2 4.2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.9 5.2A10.8 10.8 0 0112 5c5.5 0 9 7 9 7a16.8 16.8 0 01-3.1 4.1"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6.2 6.3C4.1 8 3 12 3 12s3.5 7 9 7a8.9 8.9 0 004.1-.9"/>
+              </svg>
+              }
+            </button>
+          </div>
+
+          @if (
+            credentialsForm.get('password')?.touched &&
+            credentialsForm.get('password')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Password is required
+          </p>
+          }
+
+          @if (
+            credentialsForm.get('password')?.touched &&
+            credentialsForm.get('password')?.hasError('minlength')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Password must be at least 4 characters
+          </p>
+          }
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Confirm Password</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <div class="relative">
+            <input
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="••••••••"
+              class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 pr-12 text-sm focus:input-primary"
+            />
+
+            <button
+              type="button"
+              tabindex="-1"
+              class="text-base-content/60 hover:text-primary absolute top-1/2 right-4 -translate-y-1/2"
+              (click)="toggleConfirmPasswordVisibility()"
+            >
+                          @if (!showConfirmPassword()) {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/>
+                <circle cx="12" cy="12" r="3" stroke-width="1.8"/>
+              </svg>
+              }
+
+              @if (showConfirmPassword()) {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4l16 16"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.6 10.7a3 3 0 004.2 4.2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.9 5.2A10.8 10.8 0 0112 5c5.5 0 9 7 9 7a16.8 16.8 0 01-3.1 4.1"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6.2 6.3C4.1 8 3 12 3 12s3.5 7 9 7a8.9 8.9 0 004.1-.9"/>
+              </svg>
+              }
+            </button>
+          </div>
+
+          @if (
+            credentialsForm.get('confirmPassword')?.touched &&
+            credentialsForm.get('confirmPassword')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Confirm password is required
+          </p>
+          }
+
+          @if (
+            credentialsForm.get('confirmPassword')?.touched &&
+            credentialsForm.hasError('passwordMismatch')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Passwords do not match
+          </p>
+          }
+        </div>
+
+        <!-- NEXT BUTTON -->
+        <button
+          type="button"
+          class="btn btn-primary col-span-1 md:col-span-2 h-11 rounded-xl text-sm font-bold normal-case shadow-lg"
+          (click)="nextStep()"
+        >
+          Next
+        </button>
+      </form>
+      }
+
+      <!-- STEP 2 -->
+      @if (currentStep() === 2) {
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="register()"
+        class="grid grid-cols-1 gap-5 md:grid-cols-2"
+      >
+        <!-- GENDER -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Gender</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <div
+            class="flex h-10 items-center gap-6 rounded-lg border border-base-300 bg-base-100 px-4"
+          >
+            <label class="label cursor-pointer gap-2 p-0">
+              <input
+                type="radio"
+                formControlName="gender"
+                value="male"
+                class="radio radio-primary radio-sm"
+              />
+              <span class="text-sm">Male</span>
+            </label>
+
+            <label class="label cursor-pointer gap-2 p-0">
+              <input
+                type="radio"
+                formControlName="gender"
+                value="female"
+                class="radio radio-primary radio-sm"
+              />
+              <span class="text-sm">Female</span>
+            </label>
+          </div>
+
+          @if (
+            profileForm.get('gender')?.touched &&
+            profileForm.get('gender')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Gender is required
+          </p>
+          }
+        </div>
+
+        <!-- DOB -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Date of Birth</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <input
+            type="date"
+            formControlName="dateOfBirth"
+            [max]="getMaxDate()"
+            class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 text-sm focus:input-primary"
+          />
+
+          @if (
+            profileForm.get('dateOfBirth')?.touched &&
+            profileForm.get('dateOfBirth')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Date of birth is required
+          </p>
+          }
+        </div>
+
+        <!-- CITY -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">City</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <input
+            type="text"
+            formControlName="city"
+            placeholder="Your city"
+            class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 text-sm focus:input-primary"
+          />
+
+          @if (
+            profileForm.get('city')?.touched &&
+            profileForm.get('city')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            City is required
+          </p>
+          }
+        </div>
+
+        <!-- COUNTRY -->
+        <div>
+          <label class="mb-2 block text-xs font-semibold">
+            <span class="text-base-content">Country</span>
+            <span class="text-error font-bold">*</span>
+          </label>
+
+          <input
+            type="text"
+            formControlName="country"
+            placeholder="Your country"
+            class="input input-bordered h-10 w-full rounded-lg border-base-300 bg-base-100 text-sm focus:input-primary"
+          />
+
+          @if (
+            profileForm.get('country')?.touched &&
+            profileForm.get('country')?.hasError('required')
+          ) {
+          <p class="text-error mt-1.5 text-xs">
+            Country is required
+          </p>
+          }
+        </div>
+
+        <!-- ERROR -->
+        @if (errorMessage()) {
+        <div class="alert alert-error col-span-1 md:col-span-2 text-sm shadow-sm">
+          <span>{{ errorMessage() }}</span>
+        </div>
+        }
+
+        <!-- VALIDATION ERRORS -->
+        @if (validationErrors().length > 0) {
+        <div class="alert alert-error col-span-1 md:col-span-2 text-sm shadow-sm">
+          <ul class="list-disc pl-5">
+            @for (error of validationErrors(); track $index) {
+            <li>{{ error }}</li>
+            }
+          </ul>
+        </div>
+        }
+ 
+        <!-- BUTTONS -->
+        <div class="col-span-1 grid grid-cols-1 gap-4 md:col-span-2 md:grid-cols-2">
+          <button
+            type="button"
+            class="btn btn-outline h-11 rounded-xl text-sm font-bold normal-case"
+            (click)="prevStep()"
+          >
+            Back
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary h-11 rounded-xl text-sm font-bold normal-case shadow-lg"
+            [disabled]="isPending()"
+          >
+            {{ isPending() ? 'Creating...' : 'Create Account' }}
+          </button>
+        </div>
+      </form>
+      }
+
+      <!-- FOOTER -->
+      <div class="text-base-content/70 mt-6 text-center text-xs">
+        Already have an account?
+
+        <a
+          routerLink="/auth/login"
+          class="link link-primary ml-1 font-semibold no-underline hover:underline"
+        >
+          Sign in
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

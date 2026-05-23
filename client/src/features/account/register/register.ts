@@ -1,11 +1,177 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { RegisterCreds } from '../../../types/user';
+import { AccountService } from '../../../core/services/account-service';
+
+function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+  const password = control.get('password')?.value;
+  const confirmPassword = control.get('confirmPassword')?.value;
+
+  if (!confirmPassword) {
+    return null;
+  }
+
+  return password === confirmPassword
+    ? null
+    : { passwordMismatch: true };
+}
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
-  styleUrl: './register.css',
+  styleUrl: './register.css'
 })
 export class Register {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private accountService = inject(AccountService);
 
+  protected currentStep = signal(1);
+  protected isPending = signal(false);
+  protected errorMessage = signal('');
+  protected validationErrors = signal<string[]>([]);
+
+  protected showPassword = signal(false);
+  protected showConfirmPassword = signal(false);
+
+  protected credentialsForm = this.fb.group(
+    {
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email
+        ]
+      ],
+      displayName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2)
+        ]
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4)
+        ]
+      ],
+      confirmPassword: [
+        '',
+        [
+          Validators.required
+        ]
+      ]
+    },
+    {
+      validators: passwordMatchValidator
+    }
+  );
+
+  protected profileForm = this.fb.group({
+    gender: [
+      '',
+      Validators.required
+    ],
+    dateOfBirth: [
+      '',
+      Validators.required
+    ],
+    city: [
+      '',
+      Validators.required
+    ],
+    country: [
+      '',
+      Validators.required
+    ]
+  });
+
+  togglePasswordVisibility() {
+    this.showPassword.update(value => !value);
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword.update(value => !value);
+  }
+
+  nextStep() {
+    this.credentialsForm.markAllAsTouched();
+
+    if (this.credentialsForm.invalid) {
+      return;
+    }
+
+    this.currentStep.set(2);
+  }
+
+  prevStep() {
+    this.currentStep.set(1);
+  }
+
+  getMaxDate(): string {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 18);
+    return today.toISOString().split('T')[0];
+  }
+
+  register() {
+    this.profileForm.markAllAsTouched();
+
+    if (this.credentialsForm.invalid) {
+      this.currentStep.set(1);
+      this.credentialsForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.profileForm.invalid) {
+      return;
+    }
+
+    this.isPending.set(true);
+    this.errorMessage.set('');
+    this.validationErrors.set([]);
+
+    const credentials = this.credentialsForm.getRawValue();
+    const profile = this.profileForm.getRawValue();
+
+    const payload: RegisterCreds = {
+      displayName: credentials.displayName!,
+      email: credentials.email!,
+      password: credentials.password!,
+      // gender: profile.gender!,
+      // city: profile.city!,
+      // country: profile.country!,
+      // dateOfBirth: profile.dateOfBirth!
+    };
+
+    this.accountService.register(payload)
+      .subscribe({
+        next: () => {
+           this.isPending.set(false);
+           this.router.navigateByUrl('/');
+        },
+        error: (error) => {
+          if (error?.error?.errors) {
+            const apiErrors = Object.values(error.error.errors).flat() as string[];
+            this.validationErrors.set(apiErrors);
+          } 
+          else {
+            this.errorMessage.set(error?.error || 'Registration failed');
+          }
+
+          this.isPending.set(false);
+        }
+      });
+  }
 }
