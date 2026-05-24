@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { RegisterCreds } from '../../../types/user';
 import { AccountService } from '../../../core/services/account-service';
+import { ToastService } from '../../../core/services/toast-service';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -34,11 +35,10 @@ export class Register {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private accountService = inject(AccountService);
+  private toast = inject(ToastService);
 
   protected currentStep = signal(1);
   protected isPending = signal(false);
-  protected errorMessage = signal('');
-  protected validationErrors = signal<string[]>([]);
 
   protected showPassword = signal(false);
   protected showConfirmPassword = signal(false);
@@ -139,8 +139,6 @@ export class Register {
     }
 
     this.isPending.set(true);
-    this.errorMessage.set('');
-    this.validationErrors.set([]);
 
     const credentials = this.credentialsForm.getRawValue();
     const profile = this.profileForm.getRawValue();
@@ -159,16 +157,32 @@ export class Register {
       .subscribe({
         next: () => {
            this.isPending.set(false);
+            this.toast.success(
+              'Welcome to Velentra! Account created successfully.',
+              4000
+            );
            this.router.navigateByUrl('/');
         },
         error: (error) => {
-          if (error?.error?.errors) {
-            const apiErrors = Object.values(error.error.errors).flat() as string[];
-            this.validationErrors.set(apiErrors);
-          } 
-          else {
-            this.errorMessage.set(error?.error || 'Registration failed');
-          }
+            if (error.status === 0) {
+              this.toast.error('Unable to connect to server. Please try again later.', 5000);
+            }
+
+            else if (typeof error?.error === 'string') {
+              this.toast.error(error.error, 4000);
+            }
+            
+            else if (error?.error?.errors) {
+              const apiErrors = Object.values(error.error.errors)
+                .flat()
+                .join(', ');
+
+              this.toast.error(apiErrors, 5000);
+            }
+
+            else {
+              this.toast.error('Registration failed', 4000);
+            }
 
           this.isPending.set(false);
         }

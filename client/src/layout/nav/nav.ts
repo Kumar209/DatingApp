@@ -2,6 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
 import { themes } from '../theme';
+import { ToastService } from '../../core/services/toast-service';
 
 @Component({
   selector: 'app-nav',
@@ -11,6 +12,7 @@ import { themes } from '../theme';
 export class Nav implements OnInit {
   protected accountService = inject(AccountService);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   protected selectedTheme = signal<string>(
     localStorage.getItem('theme') || 'light'
@@ -73,6 +75,12 @@ export class Nav implements OnInit {
   logout() {
     this.accountService.logout();
     this.closeMobileMenu();
+
+    this.toast.success(
+      `See you soon, ${this.userDisplayName()}!`,
+      3000
+    );
+
     this.router.navigate(['/auth/login']);
   }
 }

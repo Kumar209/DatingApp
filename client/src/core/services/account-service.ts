@@ -12,6 +12,9 @@ export class AccountService {
   // private likesService = inject(LikesService);
   // private presenceService = inject(PresenceService);
   currentUser = signal<User | null>(null);
+  /*
+private refreshTimer?: ReturnType<typeof setInterval>;
+*/
   private baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds) {
@@ -63,10 +66,46 @@ export class AccountService {
   }
 
   logout() {
+      /*
+  this.stopTokenRefreshInterval();
+  */
+ 
     localStorage.removeItem('user');
     localStorage.removeItem('token');
 
     this.currentUser.set(null);
   }
+
+    /*
+  refreshToken() {
+    return this.http.post<User>(
+      this.baseUrl + 'Account/refresh-token',
+      {},
+      { withCredentials: true }
+    );
+  }
+  */
+
+
+
+  /*
+startTokenRefreshInterval() {
+  this.stopTokenRefreshInterval();
+
+  this.refreshTimer = setInterval(() => {
+    this.refreshToken().subscribe({
+      next: user => this.setCurrentUser(user),
+      error: () => this.logout()
+    });
+  }, 14 * 24 * 60 * 60 * 1000);
+}
+
+stopTokenRefreshInterval() {
+  if (this.refreshTimer) {
+    clearInterval(this.refreshTimer);
+    this.refreshTimer = undefined;
+  }
+}
+*/
 
 }

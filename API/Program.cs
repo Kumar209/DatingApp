@@ -1,5 +1,6 @@
 using API.Data;
 using API.Interfacess;
+using API.Middleware;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -75,7 +76,13 @@ if (app.Environment.IsDevelopment())
 
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseDeveloperExceptionPage();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(
     x => x.AllowAnyHeader()

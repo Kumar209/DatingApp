@@ -1,0 +1,80 @@
+<div class="relative min-h-[calc(100vh-64px)] overflow-hidden bg-base-200">
+  <!-- background glow -->
+  <div
+    class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,oklch(var(--p)/0.07)_0%,transparent_35%),radial-gradient(circle_at_bottom_right,oklch(var(--s)/0.06)_0%,transparent_35%)]"
+  ></div>
+
+  <div
+    class="relative z-10 flex min-h-[calc(100vh-64px)] items-center justify-center px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12"
+  >
+    <div
+      class="w-full max-w-2xl rounded-3xl border border-base-300 bg-base-100/85 p-6 shadow-2xl backdrop-blur-xl sm:p-8 lg:p-10"
+    >
+      <div class="flex flex-col items-center text-center">
+        <!-- icon -->
+        <div
+          class="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-error/10 ring-8 ring-error/5 sm:h-24 sm:w-24"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.6"
+            stroke="currentColor"
+            class="h-10 w-10 text-error sm:h-12 sm:w-12"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+        </div>
+
+        <!-- badge -->
+        <div
+          class="badge badge-error badge-outline mb-4 gap-2 px-4 py-3 text-[10px] font-semibold uppercase tracking-wide sm:text-[11px]"
+        >
+          404 • Page Missing
+        </div>
+
+        <!-- heading -->
+        <h1
+          class="text-base-content text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl"
+        >
+          Oops, this page
+          <span class="text-primary block">
+            went missing
+          </span>
+        </h1>
+
+        <!-- description -->
+        <p
+          class="text-base-content/65 mt-4 max-w-lg text-sm leading-relaxed sm:text-base"
+        >
+          The page you're looking for may have been moved, deleted, or never
+          existed. Let’s get you back to meaningful connections.
+        </p>
+
+        <!-- actions -->
+        <div
+          class="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row"
+        >
+          <button
+            class="btn btn-outline h-11 rounded-xl px-6 text-sm font-semibold"
+            (click)="goBack()"
+          >
+            ← Go Back
+          </button>
+
+          <a
+            routerLink="/"
+            class="btn btn-primary h-11 rounded-xl px-6 text-sm font-semibold shadow-lg"
+          >
+            Return Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

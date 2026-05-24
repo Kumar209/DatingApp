@@ -390,23 +390,6 @@
           }
         </div>
 
-        <!-- ERROR -->
-        @if (errorMessage()) {
-        <div class="alert alert-error col-span-1 md:col-span-2 text-sm shadow-sm">
-          <span>{{ errorMessage() }}</span>
-        </div>
-        }
-
-        <!-- VALIDATION ERRORS -->
-        @if (validationErrors().length > 0) {
-        <div class="alert alert-error col-span-1 md:col-span-2 text-sm shadow-sm">
-          <ul class="list-disc pl-5">
-            @for (error of validationErrors(); track $index) {
-            <li>{{ error }}</li>
-            }
-          </ul>
-        </div>
-        }
  
         <!-- BUTTONS -->
         <div class="col-span-1 grid grid-cols-1 gap-4 md:col-span-2 md:grid-cols-2">

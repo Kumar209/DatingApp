@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterLink, Router } from '@angular/router';
 import { AccountService } from '../../../core/services/account-service';
 import { LoginCreds } from '../../../types/user';
+import { ToastService } from '../../../core/services/toast-service';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +15,10 @@ import { LoginCreds } from '../../../types/user';
 export class Login {
   private accountService = inject(AccountService);
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   protected isPending = signal(false);
-  protected errorMessage = signal('');
    protected showPassword = signal(false);
 
   protected loginForm = this.fb.group({
@@ -49,7 +49,6 @@ export class Login {
     }
 
     this.isPending.set(true);
-    this.errorMessage.set('');
  
     const { email, password } = this.loginForm.getRawValue();
 
@@ -60,20 +59,26 @@ export class Login {
 
     this.accountService.login(loginCreds).subscribe({
       next: (response) => {
-        console.log('Login success:', response);
 
         this.isPending.set(false);
+        this.toast.success( `Welcome back, ${response.displayName || 'User'} ✨`, 3000 );
+
         this.router.navigateByUrl('/');
       },
 
       error: (error) => {
-        console.log(error)
+        let message = 'Something went wrong';
 
-        this.errorMessage.set(
-          error?.error || 'Login failed'
-        );
+          if (error.status === 0) {
+            message = 'Cannot connect to server. Please try again later.';
+          } else if (typeof error.error === 'string') {
+            message = error.error;
+          } else if (error?.error?.message) {
+            message = error.error.message;
+          }
 
-        this.isPending.set(false);
+          this.toast.error(message);
+          this.isPending.set(false);
       }
     });
   }

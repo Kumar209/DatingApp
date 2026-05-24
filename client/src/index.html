@@ -9,6 +9,31 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
+  <div
+    id="initial-splash"
+    class="fixed inset-0 z-[99999] flex items-center justify-center bg-base-200"
+  >
+    <div class="flex flex-col items-center gap-5">
+      <img
+        src="/logo.png"
+        alt="Velentra"
+        class="h-20 w-20 object-contain animate-pulse"
+      />
+
+      <div class="text-center">
+        <h1 class="text-base-content text-2xl font-bold tracking-tight">
+          Velentra
+        </h1>
+
+        <p class="text-base-content/60 mt-2 text-sm">
+          Preparing meaningful connections...
+        </p>
+      </div>
+
+      <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  </div>
+  
   <app-root></app-root>
 </body>
 </html>
