@@ -11,7 +11,7 @@
       class="grid w-full max-w-[1250px] grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20"
     >
       <!-- LEFT -->
-      <div class="max-w-lg text-center lg:ml-10 lg:text-left">
+        <div class="mx-auto max-w-lg text-center lg:mx-0 lg:ml-10 lg:text-left">
         <div
           class="badge badge-primary badge-outline mb-4 gap-2 px-3 py-2 text-[11px] font-medium"
         >
@@ -35,9 +35,12 @@
           meaningful relationships in a modern secure dating experience
           designed for connection—not endless swiping.
         </p>
-
+<!-- 
         <div
           class="mt-6 flex flex-col items-center gap-3 sm:flex-row lg:items-start"
+        > -->
+        <div
+          class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start lg:items-start"
         >
           @if (!accountService.currentUser()) {
             <button

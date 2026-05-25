@@ -17,8 +17,6 @@ export class App implements OnInit {
 
   protected readonly title = signal('Valentra');
 
-  protected members = signal<Member[]>([]);
-
   protected hideNavRoutes = ['/auth/login', '/auth/register'];
 
   protected get showNav(): boolean {
@@ -26,18 +24,7 @@ export class App implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMembers();
     this.accountService.loadCurrentUser();
-  }
-
-  async getMembers(){
-    await this.http.get<Member[]>("https://localhost:7174/api/Members/getmembers").subscribe({
-      next: (response) => {
-        this.members.set(response);
-      },
-      error: (error) => console.log(error),
-      complete: () => console.log("Request completed")
-    })
   }
 
 }

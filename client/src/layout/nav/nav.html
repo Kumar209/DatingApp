@@ -79,6 +79,7 @@
           <li>
             <a
               routerLink="/members"
+              [routerLinkActiveOptions]="{ exact: true }"
               routerLinkActive="bg-primary text-primary-content"
               class="rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-wide transition"
             >
@@ -89,6 +90,7 @@
           <li>
             <a
               routerLink="/lists"
+              [routerLinkActiveOptions]="{ exact: true }"
               routerLinkActive="bg-primary text-primary-content"
               class="rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-wide transition"
             >
@@ -244,6 +246,7 @@
         @if (isLoggedIn()) {
           <a
             routerLink="/members"
+            [routerLinkActiveOptions]="{ exact: true }"
             routerLinkActive="bg-primary text-primary-content"
             (click)="closeMobileMenu()"
             class="rounded-xl px-4 py-3 text-sm font-semibold uppercase tracking-wide"
@@ -253,6 +256,7 @@
 
           <a
             routerLink="/lists"
+            [routerLinkActiveOptions]="{ exact: true }"
             routerLinkActive="bg-primary text-primary-content"
             (click)="closeMobileMenu()"
             class="rounded-xl px-4 py-3 text-sm font-semibold uppercase tracking-wide"

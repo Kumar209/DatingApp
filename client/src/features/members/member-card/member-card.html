@@ -1,0 +1,72 @@
+@if (member(); as member) {
+<div
+  routerLink="/members/{{ member.id }}"
+  class="group card cursor-pointer overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+>
+  <!-- IMAGE -->
+  <div class="relative h-[250px] overflow-hidden">
+    <img
+      [src]="member.imageUrl || '/user.png'"
+      [alt]="member.displayName"
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+
+    <!-- subtle overlay -->
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
+    ></div>
+
+    <!-- online badge -->
+    @if (isOnline()) {
+      <div
+        class="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-base-100/95 px-3 py-1.5 shadow-md backdrop-blur"
+      >
+        <span class="h-2.5 w-2.5 rounded-full bg-success"></span>
+        <span class="text-xs font-semibold text-success">Online</span>
+      </div>
+    }
+
+    <!-- like -->
+    <button
+      (click)="toggleLike($event)"
+      class="btn btn-circle btn-sm absolute right-4 top-4 border-none bg-base-100/95 shadow-md backdrop-blur hover:scale-110"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        [attr.fill]="hasLiked() ? 'currentColor' : 'none'"
+        viewBox="0 0 24 24"
+        stroke-width="1.8"
+        stroke="currentColor"
+        class="size-5"
+        [class.text-error]="hasLiked()"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="flex items-center justify-between p-5">
+    <div class="min-w-0">
+      <h3 class="text-base-content truncate text-xl font-bold">
+        {{ member.displayName }}, {{ member.dateOfBirth | age }}
+      </h3>
+
+      <p class="text-base-content/65 mt-1 truncate text-sm">
+        {{ member.city }}, {{ member.country }}
+      </p>
+    </div>
+
+    <button
+      class="btn btn-circle btn-primary btn-sm shrink-0 shadow-md"
+      (click)="$event.stopPropagation()"
+    >
+      →
+    </button>
+  </div>
+</div>
+}

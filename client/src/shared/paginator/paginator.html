@@ -1,0 +1,96 @@
+<div
+  class="flex w-full flex-col gap-4 rounded-2xl border border-base-300 bg-base-100/80 p-4 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between"
+>
+  <!-- LEFT -->
+  <div
+    class="flex flex-col gap-3 sm:flex-row sm:items-center"
+  >
+    <div class="flex items-center gap-3">
+      <span class="text-base-content/70 text-sm font-medium whitespace-nowrap">
+        Show
+      </span>
+
+      <select
+        class="select select-bordered select-sm w-24 rounded-xl bg-base-100"
+        (change)="onPageChange(undefined, $event.target)"
+      >
+        @for (size of pageSizeOptions(); track $index) {
+          <option
+            [value]="size"
+            [selected]="size === pageSize()"
+          >
+            {{ size }}
+          </option>
+        }
+      </select>
+
+      <span class="text-base-content/70 text-sm font-medium whitespace-nowrap">
+        per page
+      </span>
+    </div>
+
+    <div
+      class="text-base-content/60 text-sm font-medium"
+    >
+      {{ (pageNumber() - 1) * pageSize() + 1 }}
+      -
+      {{ lastItemIndex() }}
+      of
+      {{ totalCount() }}
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="flex items-center justify-center gap-2 sm:justify-end">
+    <!-- PREVIOUS -->
+    <button
+      class="btn btn-circle btn-sm border border-base-300 bg-base-100 shadow-sm transition-all hover:scale-105"
+      [disabled]="pageNumber() === 1"
+      (click)="onPageChange(pageNumber() - 1)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5 8.25 12l7.5-7.5"
+        />
+      </svg>
+    </button>
+
+    <!-- PAGE INFO -->
+    <div
+      class="rounded-xl bg-primary/10 px-4 py-2 text-sm font-semibold text-primary"
+    >
+      {{ pageNumber() }} / {{ totalPages() }}
+    </div>
+
+    <!-- NEXT -->
+    <button
+      class="btn btn-circle btn-sm border border-base-300 bg-base-100 shadow-sm transition-all hover:scale-105"
+      [disabled]="pageNumber() >= totalPages()"
+      (click)="onPageChange(pageNumber() + 1)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m8.25 4.5 7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

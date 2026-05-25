@@ -1,0 +1,313 @@
+@if (!uploadMode()) {
+
+  @if (photos(); as photos) {
+
+    @if (photos.length > 0) {
+
+      <section class="space-y-5">
+
+        <!-- TOP ACTION BAR -->
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+          <!-- stats -->
+          <div class="grid flex-1 grid-cols-2 gap-3 lg:max-w-md">
+            <div
+              class="rounded-2xl border border-base-300 bg-base-200/40 px-4 py-4 shadow-sm"
+            >
+              <p
+                class="text-[11px] font-semibold uppercase tracking-[0.18em] text-base-content/50"
+              >
+                Total
+              </p>
+
+              <h3 class="mt-1 text-2xl font-bold text-base-content">
+                {{ photos.length }}
+              </h3>
+            </div>
+
+            <div
+              class="rounded-2xl border border-base-300 bg-base-200/40 px-4 py-4 shadow-sm"
+            >
+              <p
+                class="text-[11px] font-semibold uppercase tracking-[0.18em] text-base-content/50"
+              >
+                Approved
+              </p>
+
+              <h3 class="mt-1 text-2xl font-bold text-success">
+                {{ approvedPhotoCount() }}
+              </h3>
+            </div>
+          </div>
+
+          <!-- upload action -->
+          @if (isOwner) {
+            <button
+              (click)="showUploadMode()"
+              class="btn btn-primary rounded-2xl px-6 shadow-md"
+            >
+              Upload Photos
+            </button>
+          }
+
+        </div>
+
+        <!-- PHOTO GRID -->
+        <!-- <div
+          class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        >
+          @for (photo of photos; track photo.id) {
+
+            <div
+              class="group overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+
+              <div class="relative aspect-[4/5] overflow-hidden rounded-t-2xl">
+
+                <img
+                  [src]="photo.url"
+                  alt="Member photo"
+                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  [class.opacity-40]="!photo.isApproved"
+                />
+
+
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"
+                ></div>
+
+
+                @if (photo.url === memberService.member()?.imageUrl) {
+                  <div
+                    class="badge badge-success absolute left-3 top-3 rounded-full px-3 py-2 font-medium shadow-md"
+                  >
+                    Main Photo
+                  </div>
+                }
+
+                @if (!photo.isApproved) {
+                  <div
+                    class="badge badge-error absolute bottom-3 left-3 rounded-full px-3 py-2 font-medium shadow-md"
+                  >
+                    Awaiting Approval
+                  </div>
+                }
+
+
+                @if (isOwner) {
+                  <div class="absolute right-3 top-3 z-20 flex gap-2">
+                    <app-star-button
+                      [disabled]="photo.url === memberService.member()?.imageUrl || !photo.isApproved"
+                      [selected]="photo.url === memberService.member()?.imageUrl"
+                      (clickEvent)="setMainPhoto(photo)"
+                    />
+
+                    <app-delete-button
+                      [disabled]="photo.url === memberService.member()?.imageUrl"
+                      (clickEvent)="deletePhoto(photo.id)"
+                    />
+                  </div>
+                }
+
+              </div>
+
+              <div class="flex items-center justify-between px-4 py-4">
+                <div>
+                  <p class="text-sm font-semibold text-base-content">
+                    Photo #{{ photo.id }}
+                  </p>
+
+                  <p class="text-xs text-base-content/50">
+                    {{
+                      photo.isApproved
+                        ? 'Visible on profile'
+                        : 'Pending moderation'
+                    }}
+                  </p>
+                </div>
+
+                @if (photo.url === memberService.member()?.imageUrl) {
+                  <div class="badge badge-success badge-sm">
+                    Active
+                  </div>
+                }
+              </div>
+
+            </div>
+
+          }
+        </div> -->
+
+        <!-- MASONRY PHOTO GALLERY -->
+        <div
+        class="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4"
+        >
+        @for (photo of photos; track photo.id) {
+
+            <div
+            class="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+
+            <!-- IMAGE CONTAINER -->
+            <div
+                class="relative flex items-center justify-center overflow-hidden bg-base-200/20"
+            >
+                <img
+                [src]="photo.url"
+                alt="Member photo"
+                class="max-h-[520px] w-full object-contain transition duration-500 group-hover:scale-[1.02]"
+                [class.opacity-40]="!photo.isApproved"
+                />
+
+                <!-- subtle overlay -->
+                <div
+                class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"
+                ></div>
+
+                <!-- MAIN PHOTO BADGE -->
+                @if (photo.url === memberService.member()?.imageUrl) {
+                <div
+                    class="badge badge-success absolute left-3 top-3 rounded-full px-3 py-2 font-medium shadow-md"
+                >
+                    Main Photo
+                </div>
+                }
+
+                <!-- APPROVAL BADGE -->
+                @if (!photo.isApproved) {
+                <div
+                    class="badge badge-error absolute bottom-3 left-3 rounded-full px-3 py-2 font-medium shadow-md"
+                >
+                    Awaiting Approval
+                </div>
+                }
+
+                <!-- OWNER ACTIONS -->
+                @if (isOwner) {
+                <div
+                    class="absolute right-3 top-3 z-20 flex gap-2"
+                >
+                    <app-star-button
+                    [disabled]="photo.url === memberService.member()?.imageUrl || !photo.isApproved"
+                    [selected]="photo.url === memberService.member()?.imageUrl"
+                    (clickEvent)="setMainPhoto(photo)"
+                    />
+
+                    <app-delete-button
+                    [disabled]="photo.url === memberService.member()?.imageUrl"
+                    (clickEvent)="deletePhoto(photo.id)"
+                    />
+                </div>
+                }
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="flex items-center justify-between px-4 py-4">
+                <div>
+                <p class="text-sm font-semibold text-base-content">
+                    Added {{ photo.created | date:'MMM d, y' }}
+                </p>
+
+                <p class="text-xs text-base-content/50">
+                    {{
+                    photo.isApproved
+                        ? 'Visible on profile'
+                        : 'Pending moderation'
+                    }}
+                </p>
+                </div>
+
+                @if (photo.url === memberService.member()?.imageUrl) {
+                <div class="badge badge-success badge-sm">
+                    Active
+                </div>
+                }
+            </div>
+
+            </div>
+
+        }
+        </div>
+
+      </section>
+
+    } @else {
+
+      <!-- EMPTY STATE -->
+      <section
+        class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-base-300 bg-base-200/30 px-6 py-16 text-center"
+      >
+        <div
+          class="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+        </div>
+
+        <h3 class="text-xl font-bold text-base-content">
+          No photos yet
+        </h3>
+
+        <p class="mt-2 max-w-md text-sm text-base-content/60">
+          Add photos to make your profile more engaging.
+        </p>
+
+        @if (isOwner) {
+          <button
+            (click)="showUploadMode()"
+            class="btn btn-primary mt-5 rounded-2xl px-6"
+          >
+            Upload First Photo
+          </button>
+        }
+      </section>
+
+    }
+
+  }
+
+} @else {
+
+  <!-- UPLOAD MODE -->
+  <section
+    class="rounded-2xl border border-base-300 bg-base-100 p-5 shadow-lg"
+  >
+    <div class="mb-5 flex items-center justify-between">
+      <div>
+        <h3 class="text-xl font-bold text-base-content">
+          Upload New Photos
+        </h3>
+
+        <p class="mt-1 text-sm text-base-content/60">
+          Add high-quality photos to improve your profile.
+        </p>
+      </div>
+
+      <button
+        (click)="hideUploadMode()"
+        class="btn btn-outline btn-sm rounded-xl"
+      >
+        Cancel
+      </button>
+    </div>
+
+    <app-image-upload
+      (uploadFile)="onUploadImage($event)"
+      [loading]="loading()"
+    />
+  </section>
+
+}

@@ -1,1 +1,144 @@
-<p>member-list works!</p>
+
+@if (paginatedMembers(); as paginatedResult) {
+<section class="min-h-screen bg-base-200 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto w-full max-w-7xl">
+
+    <div class="mb-6 text-center">
+    <h1 class="text-base-content text-3xl font-bold sm:text-4xl">
+        Discover Members
+    </h1>
+
+    <p class="text-base-content/65 mx-auto mt-2 max-w-xl text-sm sm:text-base">
+        Explore meaningful matches tailored to your preferences.
+    </p>
+    </div>
+
+    <!-- FILTER TOOLBAR -->
+    <div class="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+    
+    <div class="flex items-center gap-2">
+    
+    <button
+        (click)="openModal()"
+        class="btn btn-primary btn-sm rounded-xl px-4 font-medium shadow-sm transition-all hover:shadow-md"
+    >
+        <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+        >
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+        />
+        </svg>
+        Filters
+    </button>
+
+    <button
+        (click)="resetFilters()"
+        class="btn btn-sm rounded-xl border border-base-300 bg-base-100 px-4 font-semibold text-base-content normal-case shadow-sm transition-all duration-200 hover:border-base-400 hover:bg-base-200/60 active:scale-95"
+    >
+        Reset
+    </button>
+
+    </div>
+
+        <div class="text-base-content text-xs font-semibold sm:text-sm">
+            <span class="inline-flex items-center gap-2 rounded-xl bg-base-100 border border-emerald-500/30 text-emerald-700 px-3.5 py-1.5 shadow-sm">
+            <span class="size-2 rounded-full bg-emerald-500"></span>
+            {{ displayMessage }}
+            </span>
+        </div>
+
+    </div>
+
+    <div class="mb-5 flex items-center justify-between px-1">
+        <div>
+            <h2 class="text-base-content text-lg font-semibold sm:text-xl">
+            Available Matches
+            </h2>
+            <p class="text-base-content/60 text-xs sm:text-sm">
+            {{ paginatedResult.metadata.totalCount }} profiles found
+            </p>
+        </div>
+    </div>
+
+    <!-- MEMBERS -->
+    @if (paginatedResult.items.length > 0) {
+      <div
+        class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+      >
+        @for (member of paginatedResult.items; track member.id) {
+          <app-member-card [member]="member" />
+        }
+      </div>
+    }
+
+    <!-- EMPTY -->
+    @if (paginatedResult.items.length === 0) {
+      <div class="flex flex-col items-center py-20 text-center">
+        <div
+          class="mb-5 flex size-20 items-center justify-center rounded-full bg-primary/10 text-primary"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+              d="m21 21-5.2-5.2m0 0A7.5 7.5 0 1 0 5.2 5.2a7.5 7.5 0 0 0 10.6 10.6Z"
+            />
+          </svg>
+        </div>
+
+        <h2 class="text-base-content text-2xl font-bold">
+          No matches found
+        </h2>
+
+        <p class="text-base-content/60 mt-3 max-w-md">
+          Try adjusting your filters to discover more meaningful connections.
+        </p>
+
+        <button
+          (click)="resetFilters()"
+          class="btn btn-primary mt-6 rounded-2xl px-8 shadow-lg"
+        >
+          Reset Filters
+        </button>
+      </div>
+    }
+
+    <!-- PAGINATOR -->
+    @if (paginatedResult.metadata && paginatedResult.items.length > 0) {
+      <div class="mt-12 flex justify-center">
+        <app-paginator
+          [pageNumber]="paginatedResult.metadata.currentPage"
+          [totalCount]="paginatedResult.metadata.totalCount"
+          [totalPages]="paginatedResult.metadata.totalPages"
+          [pageSize]="paginatedResult.metadata.pageSize"
+          (pageChange)="onPageChange($event)"
+        />
+      </div>
+    }
+
+  </div>
+</section>
+}
+
+<app-filter-modal
+  #filterModal
+  [hidden]="!paginatedMembers()"
+  (closeModal)="onClose()"
+  (submitData)="onFilterChange($event)"
+  [memberParams]="memberParams"
+/>

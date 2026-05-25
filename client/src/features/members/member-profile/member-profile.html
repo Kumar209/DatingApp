@@ -1,0 +1,221 @@
+@if (memberService.member(); as member) {
+<div class="flex flex-col gap-6">
+
+  <!-- STATS -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div
+      class="rounded-3xl border border-base-300 bg-base-200/50 p-5 shadow-sm"
+    >
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50">
+        Member Since
+      </p>
+
+      <p class="mt-2 text-lg font-bold text-base-content">
+        {{ member.created | date: 'longDate' }}
+      </p>
+    </div>
+
+    <div
+      class="rounded-3xl border border-base-300 bg-base-200/50 p-5 shadow-sm"
+    >
+      <p class="text-xs font-semibold uppercase tracking-wider text-base-content/50">
+        Last Active
+      </p>
+
+      <p class="mt-2 text-lg font-bold text-base-content">
+        {{ member.lastActive | timeAgo }}
+      </p>
+    </div>
+
+    <div
+      class="rounded-3xl border border-base-300 bg-primary/8 p-5 shadow-sm sm:col-span-2 xl:col-span-1"
+    >
+      <p class="text-xs font-semibold uppercase tracking-wider text-primary/70">
+        Status
+      </p>
+
+      <p class="mt-2 text-lg font-bold text-primary">
+        Looking for meaningful connections
+      </p>
+    </div>
+  </div>
+
+  <!-- ABOUT CARD -->
+  <div
+    class="rounded-3xl border border-base-300 bg-base-100 shadow-sm"
+  >
+    <!-- HEADER -->
+    <div
+      class="border-b border-base-300 px-5 py-5 sm:px-7"
+    >
+      <h3 class="text-xl font-bold text-base-content sm:text-2xl">
+        About {{ member.displayName }}
+      </h3>
+
+      <p class="mt-2 text-sm text-base-content/60">
+        Share personality, interests, and what makes this connection meaningful.
+      </p>
+    </div>
+
+    <!-- VIEW MODE -->
+    @if (!memberService.editMode()) {
+      <div class="px-5 py-6 sm:px-7">
+        <div
+          class="rounded-2xl bg-base-200/40 p-5 text-base leading-relaxed text-base-content/80"
+        >
+          {{
+            member.description ||
+            'No description provided yet. This member has not added their personal introduction.'
+          }}
+        </div>
+      </div>
+    }
+
+    <!-- EDIT MODE -->
+    @if (memberService.editMode()) {
+      <form
+        #editForm="ngForm"
+        (ngSubmit)="updateProfile()"
+        class="flex flex-col gap-6 px-5 py-6 sm:px-7"
+      >
+        <!-- DISPLAY NAME -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-base-content">
+            Display Name
+          </label>
+
+          <input
+            class="input input-bordered h-12 w-full rounded-2xl border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+            name="displayName"
+            [(ngModel)]="editableMember.displayName"
+            placeholder="Enter display name"
+          />
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="space-y-2">
+          <label class="text-sm font-semibold text-base-content">
+            About You
+          </label>
+
+          <textarea
+            class="textarea textarea-bordered min-h-36 w-full rounded-2xl border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+            name="description"
+            [(ngModel)]="editableMember.description"
+            placeholder="Tell people about yourself..."
+          ></textarea>
+        </div>
+
+        <!-- LOCATION -->
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-base-content">
+              City
+            </label>
+
+            <input
+              class="input input-bordered h-12 w-full rounded-2xl border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+              name="city"
+              [(ngModel)]="editableMember.city"
+              placeholder="Enter city"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-base-content">
+              Country
+            </label>
+
+            <input
+              class="input input-bordered h-12 w-full rounded-2xl border-base-300 bg-base-100 focus:border-primary focus:outline-none"
+              name="country"
+              [(ngModel)]="editableMember.country"
+              placeholder="Enter country"
+            />
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div
+          class="flex flex-col gap-3 border-t border-base-300 pt-5 sm:flex-row sm:justify-end"
+        >
+          <button
+            type="button"
+            (click)="memberService.editMode.set(false)"
+            class="btn btn-outline rounded-2xl"
+          >
+            Cancel
+          </button>
+
+          <button
+            [disabled]="!editForm.dirty"
+            type="submit"
+            class="btn btn-primary rounded-2xl px-8 shadow-md disabled:opacity-50"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+
+</div>
+}
+
+
+
+<!-- @if (memberService.member(); as member) {
+<div class="flex flex-col gap-3">
+    <div class="flex gap-3">
+        <span class="font-semibold">Member since:</span>
+        <span>{{member.created | date: 'longDate'}}</span>
+    </div>
+    <div class="flex gap-3">
+        <span class="font-semibold">Last active:</span>
+        <span>{{member.lastActive | timeAgo }}</span>
+    </div>
+    <h3 class="text-lg font-semibold text-primary">About {{member.displayName}}</h3>
+    @if (memberService.editMode()) {
+    <form #editForm="ngForm" (ngSubmit)="updateProfile()" class="flex flex-col w-full gap-4">
+        <label class="floating-label">
+            <span>Display Name</span>
+            <input 
+                class="input w-full"
+                name="displayName" 
+                [(ngModel)]="editableMember.displayName" 
+                placeholder="Display name">
+        </label>
+        <label class="floating-label">
+            <span>Description</span>
+            <textarea 
+                class="textarea w-full"
+                name="description" 
+                [(ngModel)]="editableMember.description" 
+                placeholder="Description"></textarea>
+        </label>
+        <label class="floating-label">
+            <span>City</span>
+            <input 
+                class="input w-full"
+                name="city" 
+                [(ngModel)]="editableMember.city" 
+                placeholder="City">
+        </label>
+        <label class="floating-label">
+            <span>Country</span>
+            <input 
+                class="input w-full"
+                name="country" 
+                [(ngModel)]="editableMember.country" 
+                placeholder="Country">
+        </label>
+        <div class="flex self-end">
+            <button [disabled]="!editForm.dirty" type="submit" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+    } @else {
+    <div>{{member.description || 'No description provided yet'}}</div>
+    }
+
+</div>
+} -->

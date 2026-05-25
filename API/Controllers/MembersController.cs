@@ -1,25 +1,30 @@
-﻿using API.Data;
+﻿using API.Entities;
+using API.Extensions;
+using API.Helpers;
+using API.Interfacess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class MembersController(AppDbContext context) : BaseApiController
+    public class MembersController(IMemberRepository memberRespository, IUnitOfWork uow) : BaseApiController
     {
+        [Authorize]
         [HttpGet("getmembers")]
-        public async Task<ActionResult> GetMembers() 
+        public async Task<ActionResult<IReadOnlyList<Member>>> GetMembers([FromQuery] MemberParams memberParams)
         {
-            var members = await context.Users.ToListAsync();
-            return Ok(members);
+            //Extract userId from the token and assign it to the memberParams so that we can exclude the current user from the list of members returned by the API.
+            memberParams.CurrentMemberId = User.GetMemberId();
+
+            return Ok(await uow.MemberRepository.GetMembersAsync(memberParams));
         }
 
 
         [Authorize]
         [HttpGet("getmember/{id}")]
-        public async Task<ActionResult> GetMember(string id)
+        public async Task<ActionResult<Member>> GetMember(string id)
         {
-            var member = await context.Users.FindAsync(id);
+            var member = await memberRespository.GetMemberByIdAsync(id);
 
             if(member == null)
             {
@@ -27,6 +32,14 @@ namespace API.Controllers
             }
 
             return Ok(member);
+        }
+
+        [Authorize]
+        [HttpGet("getmember/{id}/photos")]
+        public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
+        {
+            var isCurrentUser = User.GetMemberId() == id;
+            return Ok(await uow.MemberRepository.GetPhotosForMemberAsync(id, isCurrentUser));
         }
     }
 }

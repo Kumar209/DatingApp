@@ -1,0 +1,404 @@
+<dialog #filterModal class="modal">
+  <div
+    class="modal-box
+           w-[92vw]
+           max-w-2xl
+           h-auto
+           max-h-[90vh]
+           rounded-3xl
+           border border-base-300
+           bg-base-100
+           p-0
+           shadow-2xl
+           mx-auto
+           flex
+           flex-col"
+  >
+    <!-- HEADER -->
+    <div
+      class="flex shrink-0 items-start justify-between border-b border-base-300 bg-base-200/40 px-5 py-5 sm:px-7"
+    >
+      <div>
+        <h3 class="text-base-content text-xl font-bold sm:text-2xl">
+          Refine Matches
+        </h3>
+
+        <p class="text-base-content/60 mt-1 text-sm">
+          Personalize your discovery preferences
+        </p>
+      </div>
+
+      <button
+        type="button"
+        (click)="close()"
+        class="btn btn-circle btn-sm btn-ghost"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- SCROLLABLE BODY -->
+    <div class="flex-1 overflow-y-auto px-5 py-6 sm:px-7">
+      <div class="space-y-7">
+
+        <!-- GENDER -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label class="text-base-content font-semibold">
+              Preferred Gender
+            </label>
+
+            @if (memberParams().gender) {
+              <button
+                type="button"
+                (click)="clearGender()"
+                class="btn btn-ghost btn-xs text-error"
+              >
+                Clear
+              </button>
+            }
+          </div>
+
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <button
+              type="button"
+              (click)="setGender('')"
+              class="btn rounded-2xl"
+              [class.btn-primary]="!memberParams().gender"
+              [class.btn-outline]="memberParams().gender"
+            >
+              All
+            </button>
+
+            <button
+              type="button"
+              (click)="setGender('male')"
+              class="btn rounded-2xl capitalize"
+              [class.btn-primary]="memberParams().gender === 'male'"
+              [class.btn-outline]="memberParams().gender !== 'male'"
+            >
+              Male
+            </button>
+
+            <button
+              type="button"
+              (click)="setGender('female')"
+              class="btn rounded-2xl capitalize"
+              [class.btn-primary]="memberParams().gender === 'female'"
+              [class.btn-outline]="memberParams().gender !== 'female'"
+            >
+              Female
+            </button>
+          </div>
+        </div>
+
+        <!-- AGE -->
+        <div class="space-y-4">
+          <div>
+            <label class="text-base-content font-semibold">
+              Age Range
+            </label>
+
+            <p class="text-base-content/60 mt-1 text-sm">
+              Choose your preferred age bracket
+            </p>
+          </div>
+
+          <div
+            class="grid grid-cols-1 gap-4 rounded-2xl border border-base-300 bg-base-200/60 p-4 sm:grid-cols-2"
+          >
+            <div class="space-y-2">
+              <label class="text-base-content/70 text-sm font-medium">
+                Minimum Age
+              </label>
+
+             <input
+                type="number"
+                class="input w-full rounded-xl border border-base-300 bg-base-100
+                        focus:outline-none focus:ring-2 focus:ring-primary/30
+                        focus:border-primary transition-all duration-200"
+                [min]="18"
+                [(ngModel)]="memberParams().minAge"
+                name="minAge"
+                (change)="onMinAgeChange()"
+             />
+
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-base-content/70 text-sm font-medium">
+                Maximum Age
+              </label>
+
+             <input
+                type="number"
+                class="input w-full rounded-xl border border-base-300 bg-base-100
+                        focus:outline-none focus:ring-2 focus:ring-primary/30
+                        focus:border-primary transition-all duration-200"
+                [min]="memberParams().minAge"
+                [(ngModel)]="memberParams().maxAge"
+                name="maxAge"
+                (change)="onMaxAgeChange()"
+            />
+            </div>
+          </div>
+        </div>
+
+        <!-- SORT -->
+        <div class="space-y-3">
+          <label class="text-base-content font-semibold">
+            Sort Results
+          </label>
+
+          <select
+            name="orderBy"
+            class="select select-bordered w-full rounded-2xl"
+            [(ngModel)]="memberParams().orderBy"
+          >
+            <option value="lastActive">Recently Active</option>
+            <option value="created">Newest Members</option>
+          </select>
+        </div>
+
+        <!-- SUMMARY -->
+        <div
+          class="rounded-2xl border border-primary/20 bg-primary/10 p-4"
+        >
+          <p class="text-primary text-sm font-semibold">
+            Current Selection
+          </p>
+
+          <p class="text-base-content/70 mt-2 text-sm">
+            {{ filterSummary }}
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div
+      class="shrink-0 flex flex-col gap-3 border-t border-base-300 bg-base-100 px-5 py-5 sm:flex-row sm:justify-end sm:px-7"
+    >
+      <button
+        type="button"
+        (click)="resetFilters()"
+        class="btn btn-outline rounded-2xl"
+      >
+        Reset
+      </button>
+
+      <button
+        type="button"
+        (click)="submit()"
+        class="btn btn-primary rounded-2xl px-8 shadow-lg"
+      >
+        Apply Filters
+      </button>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button (click)="close()">Close</button>
+  </form>
+</dialog>
+
+
+
+
+<!-- <dialog #filterModal class="modal">
+  <div
+    class="modal-box
+           w-[calc(100%-1.5rem)]
+           max-w-2xl
+           rounded-3xl
+           border border-base-300
+           bg-base-100/95
+           p-0
+           shadow-2xl
+           backdrop-blur-xl
+           mx-3
+           my-4
+           max-h-[92vh]
+           overflow-y-auto"
+  >
+    <div
+      class="flex items-center justify-between border-b border-base-300 px-5 py-5 sm:px-7"
+    >
+      <div>
+        <h3 class="text-base-content text-xl font-bold sm:text-2xl">
+          Refine Matches
+        </h3>
+
+        <p class="text-base-content/60 mt-1 text-sm">
+          Personalize your discovery preferences
+        </p>
+      </div>
+
+      <button
+        (click)="close()"
+        class="btn btn-circle btn-sm btn-ghost"
+      >
+        ✕
+      </button>
+    </div>
+
+
+    <div class="space-y-7 px-5 py-6 sm:px-7">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="text-base-content font-semibold">
+            Preferred Gender
+          </label>
+
+          @if (memberParams().gender) {
+            <button
+              type="button"
+              (click)="clearGender()"
+              class="btn btn-ghost btn-xs text-error"
+            >
+              Clear
+            </button>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <button
+            type="button"
+            (click)="setGender('')"
+            class="btn rounded-2xl"
+            [class.btn-primary]="!memberParams().gender"
+            [class.btn-outline]="memberParams().gender"
+          >
+            All
+          </button>
+
+          <button
+            type="button"
+            (click)="setGender('male')"
+            class="btn rounded-2xl capitalize"
+            [class.btn-primary]="memberParams().gender === 'male'"
+            [class.btn-outline]="memberParams().gender !== 'male'"
+          >
+            Male
+          </button>
+
+          <button
+            type="button"
+            (click)="setGender('female')"
+            class="btn rounded-2xl capitalize"
+            [class.btn-primary]="memberParams().gender === 'female'"
+            [class.btn-outline]="memberParams().gender !== 'female'"
+          >
+            Female
+          </button>
+        </div>
+      </div>
+
+
+      <div class="space-y-4">
+        <div>
+          <label class="text-base-content font-semibold">
+            Age Range
+          </label>
+
+          <p class="text-base-content/60 mt-1 text-sm">
+            Choose your preferred age bracket
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-1 gap-4 rounded-2xl border border-base-300 bg-base-200/60 p-4 sm:grid-cols-2"
+        >
+          <div class="space-y-2">
+            <label class="text-base-content/70 text-sm font-medium">
+              Minimum Age
+            </label>
+
+            <input
+              type="number"
+              class="input input-bordered w-full rounded-2xl"
+              [min]="18"
+              [(ngModel)]="memberParams().minAge"
+              name="minAge"
+              (change)="onMinAgeChange()"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-base-content/70 text-sm font-medium">
+              Maximum Age
+            </label>
+
+            <input
+              type="number"
+              class="input input-bordered w-full rounded-2xl"
+              [min]="memberParams().minAge"
+              [(ngModel)]="memberParams().maxAge"
+              name="maxAge"
+              (change)="onMaxAgeChange()"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <label class="text-base-content font-semibold">
+          Sort Results
+        </label>
+
+        <select
+          name="orderBy"
+          class="select select-bordered w-full rounded-2xl"
+          [(ngModel)]="memberParams().orderBy"
+        >
+          <option value="lastActive">
+            Recently Active
+          </option>
+
+          <option value="created">
+            Newest Members
+          </option>
+        </select>
+      </div>
+
+
+      <div
+        class="rounded-2xl border border-primary/20 bg-primary/8 p-4"
+      >
+        <p class="text-primary text-sm font-semibold">
+          Current Selection
+        </p>
+
+        <p class="text-base-content/70 mt-2 text-sm">
+          {{ filterSummary }}
+        </p>
+      </div>
+    </div>
+
+
+    <div
+      class="flex flex-col gap-3 border-t border-base-300 px-5 py-5 sm:flex-row sm:justify-end sm:px-7"
+    >
+      <button
+        type="button"
+        (click)="resetFilters()"
+        class="btn btn-outline rounded-2xl"
+      >
+        Reset
+      </button>
+
+      <button
+        type="button"
+        (click)="submit()"
+        class="btn btn-primary rounded-2xl px-8 shadow-lg"
+      >
+        Apply Filters
+      </button>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button (click)="close()">Close</button>
+  </form>
+</dialog> -->
