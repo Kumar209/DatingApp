@@ -1,6 +1,6 @@
 using API.Data;
-using API.Entities;
-using API.Interfacess;
+using API.Helpers;
+using API.Interfaces;
 using API.Middleware;
 using API.Services;
 using Microsoft.AspNetCore.Identity;
@@ -52,8 +52,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration
+    .GetSection("CloudinarySettings"));
 
 builder.Services.AddAuthentication()
     .AddJwtBearer(options =>

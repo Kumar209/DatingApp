@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
 import { themes } from '../theme';
 import { ToastService } from '../../core/services/toast-service';
+import { BusyService } from '../../core/services/busy-service';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +14,7 @@ export class Nav implements OnInit {
   protected accountService = inject(AccountService);
   private router = inject(Router);
   private toast = inject(ToastService);
+  protected busyService = inject(BusyService);
 
   protected selectedTheme = signal<string>(
     localStorage.getItem('theme') || 'light'
@@ -21,14 +23,16 @@ export class Nav implements OnInit {
   protected themes = themes;
   protected mobileMenuOpen = signal(false);
 
-  protected isLoggedIn = computed(() => !!this.accountService.currentUser());
+  protected user = this.accountService.currentUser;
+
+  protected isLoggedIn = computed(() => !!this.user());
 
   protected userDisplayName = computed(() =>
-    this.accountService.currentUser()?.displayName || 'User'
+    this.user()?.displayName || 'User'
   );
 
   protected userProfileImage = computed(() =>
-    this.accountService.currentUser()?.imageUrl || null
+    this.user()?.imageUrl || null
   );
 
   ngOnInit(): void {

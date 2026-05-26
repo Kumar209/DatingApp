@@ -1,4 +1,5 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
+import { ToastService } from '../../core/services/toast-service';
 
 @Component({
   selector: 'app-image-upload',
@@ -10,6 +11,7 @@ export class ImageUpload {
   protected imageSrc = signal<string | ArrayBuffer | null | undefined>(null);
   protected isDragging = false;
   private fileToUpload: File | null = null;
+  private toast = inject(ToastService);
 
   uploadFile = output<File>();
   loading = input<boolean>(false);

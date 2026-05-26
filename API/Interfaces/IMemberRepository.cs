@@ -1,7 +1,7 @@
 ﻿using API.Entities;
 using API.Helpers;
 
-namespace API.Interfacess
+namespace API.Interfaces
 {
     public interface IMemberRepository
     {
@@ -10,5 +10,6 @@ namespace API.Interfacess
         Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams);
         Task<Member?> GetMemberByIdAsync(string id);
         Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId, bool isCurrentUser);
+        Task<Member?> GetMemberForUpdate(string id);
     }
 }

@@ -3,10 +3,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Nav } from "../layout/nav/nav";
 import { Router, RouterOutlet } from '@angular/router';
 import { AccountService } from '../core/services/account-service';
+import { Loading } from '../shared/loading/loading';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav, RouterOutlet],
+  imports: [Nav, RouterOutlet, Loading],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

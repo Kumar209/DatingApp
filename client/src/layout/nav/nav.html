@@ -217,7 +217,7 @@
             class="menu dropdown-content mt-3 w-56 rounded-2xl border border-base-300 bg-base-100 p-2 shadow-xl"
           >
             <li>
-              <a routerLink="/profile/edit">
+              <a [routerLink]="['/members', user()?.id, 'profile']">
                 Edit Profile
               </a>
             </li>

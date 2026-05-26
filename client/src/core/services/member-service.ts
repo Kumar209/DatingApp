@@ -45,7 +45,8 @@ export class MemberService {
   }
 
   updateMember(member: EditableMember) {
-    return this.http.put(this.baseUrl + 'members', member);
+    debugger;
+    return this.http.put(this.baseUrl + 'members/update-member', member);
   }
 
   uploadPhoto(file: File) {

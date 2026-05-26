@@ -1,4 +1,4 @@
-﻿using API.Interfacess;
+﻿using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -12,7 +12,7 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IMemberRepository? _memberRepository;
     //private IMessageRepository? _messageRepository;
     //private ILikesRepository? _likesRepository;
-    //private IPhotoRepository? _photoRepository;
+    private IPhotoRepository? _photoRepository;
 
     public IMemberRepository MemberRepository => _memberRepository
         ??= new MemberRepository(context);
@@ -23,8 +23,8 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     //public ILikesRepository LikesRepository => _likesRepository
     //    ??= new LikesRepository(context);
 
-    //public IPhotoRepository PhotoRepository => _photoRepository
-    //    ??= new PhotoRepository(context);
+    public IPhotoRepository PhotoRepository => _photoRepository
+        ??= new PhotoRepository(context);
 
     public async Task<bool> Complete()
     {

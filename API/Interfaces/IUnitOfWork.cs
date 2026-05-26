@@ -1,6 +1,6 @@
 ﻿using API.Data;
 
-namespace API.Interfacess
+namespace API.Interfaces
 {
     // Coordinates all repositories using the same DbContext instance
     // so multiple related database changes can be committed together
@@ -10,7 +10,7 @@ namespace API.Interfacess
         IMemberRepository MemberRepository { get; }
         //IMessageRepository MessageRepository { get; }
         //ILikesRepository LikesRepository { get; }
-        //IPhotoRepository PhotoRepository { get; }
+        IPhotoRepository PhotoRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }
