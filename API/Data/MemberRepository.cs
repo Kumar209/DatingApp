@@ -12,11 +12,6 @@ namespace API.Data
             return await context.Members.FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<Member>> GetMembersAsync()
-        {
-            return await context.Members.ToListAsync();
-        }
-
         public async Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams)
         {
             var query = context.Members.AsQueryable();
