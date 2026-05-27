@@ -18,7 +18,7 @@ private refreshTimer?: ReturnType<typeof setInterval>;
   private baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds) {
-    return this.http.post<User>(this.baseUrl + 'Account/register', creds, 
+    return this.http.post<User>(this.baseUrl + 'account/register', creds, 
       { withCredentials: true }).pipe(
         tap(user => {
           if (user) {
@@ -30,7 +30,7 @@ private refreshTimer?: ReturnType<typeof setInterval>;
   }
 
   login(creds : LoginCreds) {
-    return this.http.post<User>(this.baseUrl + 'Account/login', creds,
+    return this.http.post<User>(this.baseUrl + 'account/login', creds,
       { withCredentials: true }).pipe(
         tap(user => {
           if (user) {

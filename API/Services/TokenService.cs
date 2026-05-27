@@ -9,7 +9,7 @@ namespace API.Services
     public class TokenService(IConfiguration config) : ITokenService   
     {
 
-        public string CreateToken(AppUser user)
+        public async Task<string> CreateToken(AppUser user)
         {
             var tokenkey = config["TokenKey"] ?? throw new Exception("TokenKey is missing in configuration");
 

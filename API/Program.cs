@@ -1,4 +1,5 @@
 using API.Data;
+using API.Entities;
 using API.Helpers;
 using API.Interfaces;
 using API.Middleware;
@@ -49,6 +50,22 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// Register ASP.NET Identity core services for AppUser
+// This gives us UserManager<AppUser>, password hashing, validation, etc.
+builder.Services.AddIdentityCore<AppUser>(options =>
+{
+    // Allow simple passwords without special characters
+    // Example: "test1234" instead of requiring "test@123"
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 4;
+})
+// Tell Identity to store users in our SQL database using AppDbContext
+// Without this, UserManager won't know where to save/load users
+.AddEntityFrameworkStores<AppDbContext>()
+// Register SignInManager service
+// Used for login-related operations like password sign-in checks
+.AddSignInManager<SignInManager<AppUser>>();
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -108,16 +125,34 @@ app.UseAuthorization();
 app.MapControllers();
 
 
+// Create a temporary dependency injection scope
+// Needed because scoped services (like DbContext, UserManager)
+// cannot be resolved directly from the root container safely.
 using var scope = app.Services.CreateScope();
+
+// Get the service provider for this temporary scope
 var services = scope.ServiceProvider;
 try
 {
+    // Resolve database context from DI container
+    // Used for migrations and database operations
     var context = services.GetRequiredService<AppDbContext>();
-    //var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+    // Resolve ASP.NET Identity UserManager
+    // Used for creating/seeding users
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+    // Apply any pending EF Core migrations automatically
+    // Ensures database schema matches current entity models
     await context.Database.MigrateAsync();
+
+    // Clear existing connection records
+    // Useful when restarting app so stale SignalR/presence connections are removed
     //await context.Connections.ExecuteDeleteAsync();
-    //await Seed.SeedUsers(userManager);
-    await Seed.SeedUsers(context);
+
+    // Seed initial users into database if not already present
+    // Helpful for development/testing/demo data
+    await Seed.SeedUsers(userManager);
 
 }
 catch (Exception ex)

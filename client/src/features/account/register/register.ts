@@ -147,10 +147,10 @@ export class Register {
       displayName: credentials.displayName!,
       email: credentials.email!,
       password: credentials.password!,
-      // gender: profile.gender!,
-      // city: profile.city!,
-      // country: profile.country!,
-      // dateOfBirth: profile.dateOfBirth!
+      gender: profile.gender!,
+      city: profile.city!,
+      country: profile.country!,
+      dateOfBirth: profile.dateOfBirth!
     };
 
     this.accountService.register(payload)
