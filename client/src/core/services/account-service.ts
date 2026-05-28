@@ -3,13 +3,14 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LoginCreds, RegisterCreds, User } from '../../types/user';
 import { tap } from 'rxjs';
+import { LikesService } from './likes-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
   private http = inject(HttpClient);
-  // private likesService = inject(LikesService);
+  private likesService = inject(LikesService);
   // private presenceService = inject(PresenceService);
   currentUser = signal<User | null>(null);
   /*
@@ -49,7 +50,7 @@ private refreshTimer?: ReturnType<typeof setInterval>;
 
     this.currentUser.set(user);
 
-    // this.likesService.getLikeIds();
+    this.likesService.getLikeIds();
 
     // if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
     //   this.presenceService.createHubConnection(user)
@@ -63,6 +64,8 @@ private refreshTimer?: ReturnType<typeof setInterval>;
 
     const user = JSON.parse(userJson) as User;
     this.currentUser.set(user);
+
+    this.likesService.getLikeIds();
   }
 
   logout() {
@@ -74,6 +77,7 @@ private refreshTimer?: ReturnType<typeof setInterval>;
     localStorage.removeItem('token');
 
     this.currentUser.set(null);
+    this.likesService.clearLikeIds();
   }
 
     /*

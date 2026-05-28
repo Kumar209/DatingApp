@@ -4,6 +4,7 @@ using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260527124940_add-migration")]
+    partial class addmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,36 +84,6 @@ namespace API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("API.Entities.Connection", b =>
-                {
-                    b.Property<string>("ConnectionId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ConnectionId");
-
-                    b.HasIndex("GroupName");
-
-                    b.ToTable("Connections");
-                });
-
-            modelBuilder.Entity("API.Entities.Group", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Groups");
-                });
-
             modelBuilder.Entity("API.Entities.Member", b =>
                 {
                     b.Property<string>("Id")
@@ -167,44 +140,6 @@ namespace API.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("API.Entities.Message", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateRead")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("MessageSent")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("RecipientDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RecipientId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("SenderDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecipientId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.Property<int>("Id")
@@ -237,17 +172,6 @@ namespace API.Migrations
                     b.ToTable("Photos");
                 });
 
-            modelBuilder.Entity("API.Entities.Connection", b =>
-                {
-                    b.HasOne("API.Entities.Group", "Group")
-                        .WithMany("Connections")
-                        .HasForeignKey("GroupName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("API.Entities.Member", b =>
                 {
                     b.HasOne("API.Entities.AppUser", "User")
@@ -278,25 +202,6 @@ namespace API.Migrations
                     b.Navigation("TargetMember");
                 });
 
-            modelBuilder.Entity("API.Entities.Message", b =>
-                {
-                    b.HasOne("API.Entities.Member", "Recipient")
-                        .WithMany("MessagesReceived")
-                        .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.Member", "Sender")
-                        .WithMany("MessagesSent")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Recipient");
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.HasOne("API.Entities.Member", "Member")
@@ -314,20 +219,11 @@ namespace API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("API.Entities.Group", b =>
-                {
-                    b.Navigation("Connections");
-                });
-
             modelBuilder.Entity("API.Entities.Member", b =>
                 {
                     b.Navigation("LikedByMembers");
 
                     b.Navigation("LikedMembers");
-
-                    b.Navigation("MessagesReceived");
-
-                    b.Navigation("MessagesSent");
 
                     b.Navigation("Photos");
                 });

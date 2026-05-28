@@ -3,115 +3,6 @@
     <div class="mx-auto w-full max-w-7xl">
       <div class="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <!-- LEFT SIDEBAR -->
-        <!-- <aside class="xl:col-span-4 2xl:col-span-3">
-        <div
-          class="sticky top-24 overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-xl"
-        >
-          <div
-            class="relative h-36 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20"
-          ></div>
-
-          <div class="relative px-5 pb-5">
-            <div class="-mt-16 flex flex-col items-center text-center">
-              <div class="avatar">
-                <div
-                  class="w-32 rounded-full ring-4 ring-base-100 shadow-xl sm:w-36"
-                >
-                  <img
-                    [src]="member.imageUrl || '/user.png'"
-                    [alt]="member.displayName"
-                    class="object-cover"
-                  />
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <div
-                  class="flex flex-wrap items-center justify-center gap-2"
-                >
-                  <h1 class="text-2xl font-bold text-base-content">
-                    {{ member.displayName }}, {{ member.dateOfBirth | age }}
-                  </h1>
-
-                  @if (true) {
-                    <div
-                      class="badge badge-success gap-2 rounded-full px-3 py-3"
-                    >
-                      <span class="size-2 rounded-full bg-success-content"></span>
-                      Online
-                    </div>
-                  }
-                </div>
-
-                <p class="mt-2 text-sm text-base-content/65">
-                  {{ member.city }}, {{ member.country }}
-                </p>
-              </div>
-
-              <div class="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                <button
-                  routerLink="/members"
-                  class="btn btn-outline rounded-2xl"
-                >
-                  ← Back to Matches
-                </button>
-
-                @if (!isCurrentUser()) {
-                  <button
-                    [class.btn-error]="hasLiked()"
-                    [class.btn-primary]="!hasLiked()"
-                    class="btn rounded-2xl shadow-md"
-                  >
-                    {{ hasLiked() ? 'Remove Like' : 'Like Member' }}
-                  </button>
-                }
-              </div>
-            </div>
-
-            <div class="mt-8 hidden xl:block">
-              <div class="divider text-base-content/40 text-xs uppercase tracking-wider">
-                Navigation
-              </div>
-
-              <ul class="menu w-full gap-2 rounded-2xl bg-base-200/60 p-2">
-                <li>
-                  <a
-                    routerLink="profile"
-                    routerLinkActive="bg-primary text-primary-content shadow-md"
-                    class="rounded-2xl text-base font-medium"
-                  >
-                    Profile
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    routerLink="photos"
-                    routerLinkActive="bg-primary text-primary-content shadow-md"
-                    class="rounded-2xl text-base font-medium"
-                  >
-                    Photos
-                  </a>
-                </li>
-
-                @if (!isCurrentUser()) {
-                  <li>
-                    <a
-                      routerLink="messages"
-                      routerLinkActive="bg-primary text-primary-content shadow-md"
-                      class="rounded-2xl text-base font-medium"
-                    >
-                      Messages
-                    </a>
-                  </li>
-                }
-              </ul>
-            </div>
-          </div>
-        </div>
-      </aside> -->
-
-        <!-- LEFT SIDEBAR -->
         <aside class="xl:col-span-4 2xl:col-span-3">
           <div class="xl:sticky xl:top-24">
             <div
@@ -160,6 +51,7 @@
 
                   @if (!isCurrentUser()) {
                     <button
+                      (click)="toggleLike()"
                       [class.btn-error]="hasLiked()"
                       [class.btn-primary]="!hasLiked()"
                       class="btn btn-sm w-full rounded-xl"

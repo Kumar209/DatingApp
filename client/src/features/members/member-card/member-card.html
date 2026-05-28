@@ -29,6 +29,8 @@
     <!-- like -->
     <button
       (click)="toggleLike($event)"
+      [class.btn-error]="hasLiked()"
+      [class.btn-outline]="!hasLiked()"
       class="btn btn-circle btn-sm absolute right-4 top-4 border-none bg-base-100/95 shadow-md backdrop-blur hover:scale-110"
     >
       <svg

@@ -4,15 +4,15 @@ import { Nav } from "../layout/nav/nav";
 import { Router, RouterOutlet } from '@angular/router';
 import { AccountService } from '../core/services/account-service';
 import { Loading } from '../shared/loading/loading';
+import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-root',
-  imports: [Nav, RouterOutlet, Loading],
+  imports: [Nav, RouterOutlet, Loading, ConfirmDialog],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  private http = inject(HttpClient);
   protected router = inject(Router);
   private accountService = inject(AccountService);
 

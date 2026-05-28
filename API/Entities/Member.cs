@@ -19,7 +19,7 @@ namespace API.Entities
         // Navigation property
         [JsonIgnore]
         public List<Photo> Photos { get; set; } = [];
-/*
+
         [JsonIgnore]
         public List<MemberLike> LikedByMembers { get; set; } = [];
 
@@ -30,7 +30,7 @@ namespace API.Entities
         public List<Message> MessagesSent { get; set; } = [];
 
         [JsonIgnore]
-        public List<Message> MessagesReceived { get; set; } = [];*/
+        public List<Message> MessagesReceived { get; set; } = [];
 
 
         [JsonIgnore]

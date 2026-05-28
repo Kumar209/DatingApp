@@ -5,7 +5,7 @@ import { AgePipe } from '../../../core/pipes/age-pipe';
 import { AccountService } from '../../../core/services/account-service';
 import { MemberService } from '../../../core/services/member-service';
 // import { PresenceService } from '../../../core/services/presence-service';
-// import { LikesService } from '../../../core/services/likes-service';
+import { LikesService } from '../../../core/services/likes-service';
 
 @Component({
   selector: 'app-member-detailed',
@@ -20,7 +20,7 @@ export class MemberDetailed implements OnInit {
   protected memberService = inject(MemberService);
   private accountService = inject(AccountService);
   // protected presenceService = inject(PresenceService);
-  // protected likesService = inject(LikesService);
+  protected likesService = inject(LikesService);
 
   
   protected title = signal<string | undefined>('Profile');
@@ -30,8 +30,7 @@ export class MemberDetailed implements OnInit {
     return this.accountService.currentUser()?.id === this.routeId()
   });
 
-  // protected hasLiked = computed(() => this.likesService.likeIds().includes(this.routeId()!));
-  protected hasLiked = computed(() => false);
+  protected hasLiked = computed(() => this.likesService.likeIds().includes(this.routeId()!));
 
 
   constructor() {
@@ -50,5 +49,11 @@ export class MemberDetailed implements OnInit {
         this.title.set(this.route.firstChild?.snapshot?.title)
       }
     })
+  }
+
+  toggleLike() {
+    if (!this.routeId()) return;
+
+    this.likesService.toggleLike(this.routeId()!);
   }
 }

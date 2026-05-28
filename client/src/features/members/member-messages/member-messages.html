@@ -1,1 +1,65 @@
-<p>member-messages works!</p>
+<div class="flex flex-col w-full h-[60vh]">
+  <div class="flex flex-col flex-grow overflow-auto">
+    @for (message of messageService.messageThread(); track message.id) {
+      <div
+        class="chat"
+        [class.chat-start]="!message.currentUserSender"
+        [class.chat-end]="message.currentUserSender"
+      >
+        <!-- <div
+          class="chat-image avatar"
+          [class.avatar-online]="
+            presenceService.onlineUsers().includes(message.senderId || message.recipientId)
+          "
+        > -->
+         <div
+          class="chat-image avatar"
+          [class.avatar-online]="true"
+        >
+          <div class="w-10 rounded-full">
+            <img alt="image of user" [src]="message.senderImageUrl || '/user.png'" />
+          </div>
+        </div>
+        <div class="chat-header">
+          {{ message.senderDisplayName }}
+          <time class="text-xs opacity-50">{{ message.messageSent | date: 'short' }}</time>
+        </div>
+        <div class="chat-bubble">{{ message.content }}</div>
+        @if (message.currentUserSender && message.dateRead) {
+          <div class="chat-footer opacity-50">Seen {{ message.dateRead | timeAgo }}</div>
+        } @else if (message.currentUserSender && !message.dateRead) {
+          <div class="chat-footer opacity-50">Not read</div>
+        } @else {
+          <div class="chat-footer opacity-50">Delivered</div>
+        }
+      </div>
+    }
+    <div #messageEndRef></div>
+  </div>
+
+    <div class="mt-3 flex items-end gap-3 border-t border-base-300 pt-3">
+
+        <div
+            class="flex flex-1 items-end rounded-3xl border border-base-300 bg-base-100 px-3 py-2 shadow-sm transition-all duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10"
+        >
+
+            <input
+            [(ngModel)]="messageContent"
+            type="text"
+            class="w-full bg-transparent px-2 py-2 text-sm text-base-content outline-none placeholder:text-base-content/45 sm:text-[15px]"
+            placeholder="Type your message..."
+            (keydown.enter)="sendMessage()"
+            />
+
+        </div>
+
+        <button
+            (click)="sendMessage()"
+            type="submit"
+            class="btn btn-primary rounded-2xl px-6 shadow-sm"
+        >
+            Send
+        </button>
+
+    </div>
+</div>
