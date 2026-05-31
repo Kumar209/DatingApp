@@ -134,16 +134,6 @@ export class MemberPhotos implements OnInit {
       this.accountService.setCurrentUser(updatedUser);
     }
 
-    // if (currentUser) {
-    //   currentUser.imageUrl = photo.url;
-    //   this.accountService.setCurrentUser(currentUser as User);
-    // }
-
-    // this.memberService.member.update(member => ({
-    //   ...member,
-    //   imageUrl: photo.url
-    // }) as Member);
-
     this.memberService.member.update(member => {
       if (!member) return null;
 

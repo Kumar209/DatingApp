@@ -107,6 +107,16 @@
               Messages
             </a>
           </li>
+
+          <li *appHasRole="['Admin', 'Moderator']">
+            <a
+              routerLink="/admin"
+              routerLinkActive="bg-primary text-primary-content"
+              class="rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-wide transition"
+            >
+              Admin
+            </a>
+          </li>
         </ul>
       </div>
      }
@@ -271,6 +281,16 @@
             class="rounded-xl px-4 py-3 text-sm font-semibold uppercase tracking-wide"
           >
             Messages
+          </a>
+
+          <a
+            *appHasRole="['Admin', 'Moderator']"
+            routerLink="/admin"
+            routerLinkActive="bg-primary text-primary-content"
+            (click)="closeMobileMenu()"
+            class="rounded-xl px-4 py-3 text-sm font-semibold uppercase tracking-wide"
+          >
+            Admin
           </a>
         }
 

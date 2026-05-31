@@ -43,9 +43,9 @@ namespace API.Controllers
                 return ValidationProblem();
             }
 
-/*            await userManager.AddToRoleAsync(user, "Member");
+            await userManager.AddToRoleAsync(user, "Member");
 
-            await SetRefreshTokenCookie(user);*/
+            await SetRefreshTokenCookie(user);
 
             return await user.ToDto(tokenService);
         }
@@ -62,15 +62,15 @@ namespace API.Controllers
 
             if (!result) return Unauthorized("Invalid password");
 
-          /*  await SetRefreshTokenCookie(user);*/
+            await SetRefreshTokenCookie(user);
 
             return await user.ToDto(tokenService);
 
         }
 
-/*
+
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<UserDto>> RefreshToken() 
+        public async Task<ActionResult<UserDto>> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
             if (refreshToken == null) return NoContent();
@@ -118,6 +118,6 @@ namespace API.Controllers
             Response.Cookies.Delete("refreshToken");
 
             return Ok();
-        }*/
+        }
     }
 }

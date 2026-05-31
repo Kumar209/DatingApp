@@ -1,14 +1,21 @@
 ﻿using API.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Data
 {
-    public class AppDbContext : DbContext
+    // IdentityDbContext<AppUser> gives us all ASP.NET Identity tables
+    // (Users, Roles, Claims, UserRoles, Tokens, Logins, etc.)
+    // and uses our custom AppUser class as the user entity.
+    // This allows us to combine Identity tables with our own tables
+    // (Messages, Likes, Photos, etc.) in a single database context.
+    public class AppDbContext(DbContextOptions options) : IdentityDbContext<AppUser>(options)
     {
-        public AppDbContext(DbContextOptions options) : base(options) { }
-        public DbSet<AppUser> Users { get; set; }
+        // IdentityDbContext already provides AspNetUsers and other Identity tables,
+        // so no need to create a separate DbSet<AppUser>.
+        /* public DbSet<AppUser> Users { get; set; } */
         public DbSet<Member> Members { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<MemberLike> Likes { get; set; }
@@ -24,12 +31,14 @@ namespace API.Data
 
             modelBuilder.Entity<Photo>().HasQueryFilter(x => x.IsApproved);
 
-            //modelBuilder.Entity<IdentityRole>()
-            //    .HasData(
-            //        new IdentityRole { Id = "member-id", Name = "Member", NormalizedName = "MEMBER" }
-            //        new IdentityRole { Id = "moderator-id", Name = "Moderator", NormalizedName = "MODERATOR" },
-            //        new IdentityRole { Id = "admin-id", Name = "Admin", NormalizedName = "ADMIN" }
-            //    );
+            // Create default roles (Member, Moderator, Admin)
+            // automatically during database migration
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(
+                    new IdentityRole { Id = "member-id", Name = "Member", NormalizedName = "MEMBER" },
+                    new IdentityRole { Id = "moderator-id", Name = "Moderator", NormalizedName = "MODERATOR" },
+                    new IdentityRole { Id = "admin-id", Name = "Admin", NormalizedName = "ADMIN" }
+                );
 
             // Configure MemberLike entity (join table for "likes" between members)
             modelBuilder.Entity<MemberLike>()

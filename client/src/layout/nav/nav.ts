@@ -4,10 +4,11 @@ import { AccountService } from '../../core/services/account-service';
 import { themes } from '../theme';
 import { ToastService } from '../../core/services/toast-service';
 import { BusyService } from '../../core/services/busy-service';
+import { HasRole } from '../../shared/directives/has-role';
 
 @Component({
   selector: 'app-nav',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, HasRole],
   templateUrl: './nav.html',
 })
 export class Nav implements OnInit {

@@ -1,0 +1,53 @@
+<dialog #filterModal class="modal">
+  <div class="modal-box w-[92vw] max-w-xl rounded-3xl p-0 border border-base-300 bg-base-100">
+    <div class="flex items-center justify-between border-b border-base-300 px-6 py-5">
+      <div>
+        <h3 class="text-lg font-bold">User Filters</h3>
+
+        <p class="text-sm text-base-content/60">Filter and sort platform users</p>
+      </div>
+
+      <button class="btn btn-circle btn-sm btn-ghost" (click)="close()">✕</button>
+    </div>
+
+    <div class="space-y-6 p-6">
+      <div>
+        <label class="font-medium"> Role </label>
+
+        <select class="select select-bordered w-full mt-2" [(ngModel)]="params().role">
+          <option value="">All Roles</option>
+
+          <option value="Admin">Admin</option>
+
+          <option value="Moderator">Moderator</option>
+
+          <option value="Member">Member</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-medium"> Sort By </label>
+
+        <select class="select select-bordered w-full mt-2" [(ngModel)]="params().orderBy">
+          <option value="nameAsc">Name A-Z</option>
+
+          <option value="nameDesc">Name Z-A</option>
+
+          <option value="createdAsc">Oldest Users</option>
+
+          <option value="createdDesc">Newest Users</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-action border-t border-base-300 px-6 py-4">
+      <button class="btn btn-outline" (click)="resetFilters()">Reset</button>
+
+      <button class="btn btn-primary" (click)="submit()">Apply</button>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

@@ -40,4 +40,23 @@ public class PaginationHelper
             Items = items
         };
     }
+
+    public static PaginatedResult<T> CreateFromList<T>(List<T> items, int pageNumber, int pageSize)
+    {
+        var count = items.Count;
+        var pagedItems = items.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+        return new PaginatedResult<T>
+        {
+            Metadata = new PaginationMetadata
+            {
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(count / (double)pageSize),
+                PageSize = pageSize,
+                TotalCount = count
+            },
+            Items = pagedItems
+        };
+    }
+
 }

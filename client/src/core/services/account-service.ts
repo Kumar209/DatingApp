@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { LoginCreds, RegisterCreds, User } from '../../types/user';
 import { tap } from 'rxjs';
 import { LikesService } from './likes-service';
+import { PresenceService } from './presence-service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +13,9 @@ import { LikesService } from './likes-service';
 export class AccountService {
   private http = inject(HttpClient);
   private likesService = inject(LikesService);
-  // private presenceService = inject(PresenceService);
+  private presenceService = inject(PresenceService);
   currentUser = signal<User | null>(null);
-  /*
-private refreshTimer?: ReturnType<typeof setInterval>;
-*/
+  private refreshTimer?: ReturnType<typeof setInterval>;
   private baseUrl = environment.apiUrl;
 
   register(creds: RegisterCreds) {
@@ -24,7 +24,7 @@ private refreshTimer?: ReturnType<typeof setInterval>;
         tap(user => {
           if (user) {
             this.setCurrentUser(user);
-            // this.startTokenRefreshInterval();
+            this.startTokenRefreshInterval();
           }
         })
       )
@@ -36,63 +36,53 @@ private refreshTimer?: ReturnType<typeof setInterval>;
         tap(user => {
           if (user) {
             this.setCurrentUser(user);
-            // this.startTokenRefreshInterval();
+            this.startTokenRefreshInterval();
           }
         })
       )
   }
 
   setCurrentUser(user: User) {
-    // user.roles = this.getRolesFromToken(user);
+    user.roles = this.getRolesFromToken(user);
     
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('token', user.token);
-
     this.currentUser.set(user);
 
     this.likesService.getLikeIds();
 
-    // if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
-    //   this.presenceService.createHubConnection(user)
-    // }
+    if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
+      this.presenceService.createHubConnection(user)
+    }
   }
 
-  loadCurrentUser() {
-    const userJson = localStorage.getItem('user');
-
-    if (!userJson) return;
-
-    const user = JSON.parse(userJson) as User;
-    this.currentUser.set(user);
-
-    this.likesService.getLikeIds();
-  }
 
   logout() {
-      /*
-  this.stopTokenRefreshInterval();
-  */
- 
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    this.http.post(this.baseUrl + 'account/logout', {}, { withCredentials: true }).subscribe({
+      next: () => {
+        localStorage.removeItem('filters');
+        localStorage.removeItem('managed-filter');
+        this.likesService.clearLikeIds();
+        this.currentUser.set(null);
+        this.presenceService.stopHubConnection();
+      }
+    })
 
-    this.currentUser.set(null);
-    this.likesService.clearLikeIds();
   }
 
-    /*
+  private getRolesFromToken(user: User): string[] {
+    const payload = user.token.split('.')[1];
+    const decoded = atob(payload);
+    const jsonPayload = JSON.parse(decoded);
+    return Array.isArray(jsonPayload.role) ? jsonPayload.role : [jsonPayload.role]
+  }
+
   refreshToken() {
     return this.http.post<User>(
-      this.baseUrl + 'Account/refresh-token',
+      this.baseUrl + 'account/refresh-token',
       {},
       { withCredentials: true }
     );
   }
-  */
 
-
-
-  /*
 startTokenRefreshInterval() {
   this.stopTokenRefreshInterval();
 
@@ -101,7 +91,7 @@ startTokenRefreshInterval() {
       next: user => this.setCurrentUser(user),
       error: () => this.logout()
     });
-  }, 14 * 24 * 60 * 60 * 1000);
+  }, 5 * 60 * 1000); // 5min
 }
 
 stopTokenRefreshInterval() {
@@ -110,6 +100,5 @@ stopTokenRefreshInterval() {
     this.refreshTimer = undefined;
   }
 }
-*/
 
 }

@@ -15,6 +15,15 @@ public class PhotoRepository(AppDbContext context) : IPhotoRepository
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<string?> GetMainPhotoByMemberId(string memberId)
+    {
+        return await context.Members
+            .IgnoreQueryFilters()
+            .Where(m => m.Id == memberId)
+            .Select(m => m.ImageUrl)
+            .SingleOrDefaultAsync();
+    }
+
     public async Task<IReadOnlyList<PhotoForApprovalDto>> GetUnapprovedPhotos()
     {
         return await context.Photos

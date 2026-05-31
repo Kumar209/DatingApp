@@ -17,7 +17,7 @@ namespace API.Data
             var memberData = await File.ReadAllTextAsync("Data/UserSeedData.json");
             var members = JsonSerializer.Deserialize<List<SeedUserDto>>(memberData);
 
-            if(members == null)
+            if (members == null)
             {
                 Console.WriteLine("No members in seed data.");
                 return;
@@ -29,12 +29,13 @@ namespace API.Data
                 {
                     Id = member.Id,
                     Email = member.Email,
+                    UserName = member.Email,
                     DisplayName = member.DisplayName,
                     ImageUrl = member.ImageUrl,
                     Member = new Member
                     {
                         Id = member.Id,
-                        DisplayName= member.DisplayName,
+                        DisplayName = member.DisplayName,
                         Description = member.Description,
                         DateOfBirth = member.DateOfBirth,
                         ImageUrl = member.ImageUrl,
@@ -61,21 +62,49 @@ namespace API.Data
                     Console.WriteLine(result.Errors.First().Description);
                 }
 
-/*
-                await userManager.AddToRoleAsync(user, "Member");*/
+
+                await userManager.AddToRoleAsync(user, "Member");
 
             }
 
-            /*    var admin = new AppUser
-                {
-                    UserName = "admin@test.com",
-                    Email = "admin@test.com",
-                    DisplayName = "Admin"
-                };*/
-/*
-            await userManager.CreateAsync(admin, "Pa$$w0rd");
-            await userManager.AddToRolesAsync(admin, ["Admin", "Moderator"]);*/
+            var admin = new AppUser
+            {
+                UserName = "crimsondeveloper@gmail.com",
+                Email = "crimsondeveloper@gmail.com",
+                DisplayName = "Crimson Admin",
+                ImageUrl = "https://randomuser.me/api/portraits/women/53.jpg",
+            };
 
+            var res = await userManager.CreateAsync(admin, "Crimson@123");
+
+            if (res.Succeeded)
+            {
+                admin.Member = new Member
+                {
+                    Id = admin.Id, // now populated
+                    DisplayName = "Crimson Admin",
+                    Description = "Crimson Admin",
+                    DateOfBirth = DateOnly.FromDateTime(DateTime.UtcNow.AddYears(-30)),
+                    ImageUrl = "https://randomuser.me/api/portraits/women/53.jpg",
+                    Gender = "Male",
+                    City = "Admin City",
+                    Country = "Admin Country",
+                    LastActive = DateTime.UtcNow,
+                    Created = DateTime.UtcNow
+                };
+
+                admin.Member.Photos.Add(new Photo
+                {
+                    Url = "https://randomuser.me/api/portraits/women/53.jpg",
+                    IsApproved = true,
+                    MemberId = admin.Id,
+                    Created = DateTime.UtcNow
+                });
+
+                await userManager.UpdateAsync(admin);
+                await userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" });
+
+            }
         }
     }
 }

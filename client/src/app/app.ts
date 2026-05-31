@@ -12,9 +12,8 @@ import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class App {
   protected router = inject(Router);
-  private accountService = inject(AccountService);
 
   protected readonly title = signal('Valentra');
 
@@ -22,10 +21,6 @@ export class App implements OnInit {
 
   protected get showNav(): boolean {
     return !this.hideNavRoutes.includes(this.router.url);
-  }
-
-  ngOnInit(): void {
-    this.accountService.loadCurrentUser();
   }
 
 }

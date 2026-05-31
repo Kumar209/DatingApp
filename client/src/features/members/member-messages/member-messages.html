@@ -6,15 +6,11 @@
         [class.chat-start]="!message.currentUserSender"
         [class.chat-end]="message.currentUserSender"
       >
-        <!-- <div
+        <div
           class="chat-image avatar"
           [class.avatar-online]="
             presenceService.onlineUsers().includes(message.senderId || message.recipientId)
           "
-        > -->
-         <div
-          class="chat-image avatar"
-          [class.avatar-online]="true"
         >
           <div class="w-10 rounded-full">
             <img alt="image of user" [src]="message.senderImageUrl || '/user.png'" />

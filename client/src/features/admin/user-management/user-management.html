@@ -1,0 +1,207 @@
+<app-managed-user-filter-modal
+  [params]="managedUpdatedParams"
+  (submitData)="onFilterChange($event)"
+/>
+
+<div class="space-y-5">
+  <!-- HEADER -->
+  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-xl font-bold">User Management</h2>
+
+      <p class="text-sm text-base-content/60">Manage platform users and permissions</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 sm:flex">
+      <button class="btn btn-outline btn-sm w-full sm:w-auto" (click)="resetFilters()">
+        Reset
+      </button>
+
+      <button class="btn btn-primary btn-sm w-full sm:w-auto" (click)="openFilterModal()">
+        Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div class="rounded-2xl border border-base-300 bg-base-100 p-4 text-center shadow-sm">
+      <p class="text-xs text-base-content/60">Users</p>
+
+      <p class="mt-1 text-2xl font-bold text-primary">
+        {{ totalUsers() }}
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-base-300 bg-base-100 p-4 text-center shadow-sm">
+      <p class="text-xs text-base-content/60">Admins</p>
+
+      <p class="mt-1 text-2xl font-bold text-error">
+        {{ totalAdmins() }}
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-base-300 bg-base-100 p-4 text-center shadow-sm">
+      <p class="text-xs text-base-content/60">Moderators</p>
+
+      <p class="mt-1 text-2xl font-bold text-warning">
+        {{ totalModerators() }}
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-base-300 bg-base-100 p-4 text-center shadow-sm">
+      <p class="text-xs text-base-content/60">Members</p>
+
+      <p class="mt-1 text-2xl font-bold text-success">
+        {{ totalMembers() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="overflow-x-auto rounded-3xl border border-base-300 bg-base-100 shadow-sm">
+    <table class="table min-w-[760px]">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Roles</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (user of users(); track user.id) {
+          <tr class="hover">
+            <td>
+              <div class="flex items-center gap-3">
+                @if (user.imageUrl) {
+                  <div class="avatar">
+                    <div class="w-12 rounded-full ring ring-primary/20 ring-offset-2">
+                      <img [src]="user.imageUrl" />
+                    </div>
+                  </div>
+                } @else {
+                  <div class="avatar placeholder">
+                    <div class="bg-primary text-primary-content w-12 rounded-full">
+                      <span>
+                        {{ getInitials(user.displayName) }}
+                      </span>
+                    </div>
+                  </div>
+                }
+
+                <div>
+                  <div class="font-semibold">
+                    {{ user.displayName }}
+                  </div>
+
+                  <div class="text-sm text-base-content/60">
+                    {{ user.email }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="flex flex-wrap gap-2">
+                @for (role of user.roles; track role) {
+                  <span
+                    class="badge"
+                    [class.badge-error]="role === 'Admin'"
+                    [class.badge-warning]="role === 'Moderator'"
+                    [class.badge-success]="role === 'Member'"
+                  >
+                    {{ role }}
+                  </span>
+                }
+              </div>
+            </td>
+
+            <td>
+              <div class="flex justify-end">
+                <button
+                  class="btn btn-circle btn-sm btn-primary shadow-md"
+                  (click)="openRolesModal(user)"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="size-4"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATOR -->
+
+  @if (paginatedUsers()) {
+    <div class="mt-8 flex justify-center">
+      <app-paginator
+        [pageNumber]="paginatedUsers()!.metadata.currentPage"
+        [pageSize]="paginatedUsers()!.metadata.pageSize"
+        [totalCount]="paginatedUsers()!.metadata.totalCount"
+        [totalPages]="paginatedUsers()!.metadata.totalPages"
+        (pageChange)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>
+
+<!-- ROLE MODAL -->
+
+<dialog #rolesModal class="modal">
+  <div class="modal-box w-[92vw] max-w-lg rounded-3xl border border-base-300 bg-base-100 p-0">
+    <div class="border-b border-base-300 px-6 py-5">
+      <h3 class="text-xl font-bold">Manage Roles</h3>
+
+      <p class="mt-1 text-sm text-base-content/60">
+        {{ selectedUser?.displayName }}
+      </p>
+    </div>
+
+    <div class="space-y-3 p-6">
+      @for (role of availableRoles; track role) {
+        <label
+          class="flex cursor-pointer items-center justify-between rounded-2xl border border-base-300 p-4 transition-all hover:bg-base-200"
+        >
+          <div>
+            <p class="font-medium">
+              {{ role }}
+            </p>
+          </div>
+
+          <input
+            type="checkbox"
+            class="checkbox checkbox-primary"
+            [checked]="selectedUser?.roles?.includes(role)"
+            (change)="toggleRole($event, role)"
+          />
+        </label>
+      }
+    </div>
+
+    <div class="modal-action border-t border-base-300 px-6 py-4">
+      <button class="btn btn-ghost" onclick="this.closest('dialog').close()">Cancel</button>
+
+      <button class="btn btn-primary" (click)="updateRoles()">Save Changes</button>
+    </div>
+  </div>
+
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

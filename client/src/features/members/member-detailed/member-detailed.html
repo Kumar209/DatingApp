@@ -30,12 +30,19 @@
                       {{ member.displayName }}, {{ member.dateOfBirth | age }}
                     </h2>
 
-                    @if (true) {
-                      <div class="badge badge-success badge-sm gap-1 px-2">
-                        <span class="size-1.5 rounded-full bg-success-content"></span>
-                        Online
+                      <div
+                        class="badge badge-sm gap-1 px-2"
+                        [class.badge-success]="isOnline()"
+                        [class.badge-neutral]="!isOnline()"
+                      >
+                        <span
+                          class="size-1.5 rounded-full"
+                          [class.bg-success-content]="isOnline()"
+                          [class.bg-base-content]="!isOnline()"
+                        ></span>
+
+                        {{ isOnline() ? 'Online' : 'Offline' }}
                       </div>
-                    }
                   </div>
 
                   <p class="mt-1 text-sm text-base-content/60">

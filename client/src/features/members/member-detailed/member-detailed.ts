@@ -4,8 +4,8 @@ import { filter } from 'rxjs';
 import { AgePipe } from '../../../core/pipes/age-pipe';
 import { AccountService } from '../../../core/services/account-service';
 import { MemberService } from '../../../core/services/member-service';
-// import { PresenceService } from '../../../core/services/presence-service';
 import { LikesService } from '../../../core/services/likes-service';
+import { PresenceService } from '../../../core/services/presence-service';
 
 @Component({
   selector: 'app-member-detailed',
@@ -19,7 +19,7 @@ export class MemberDetailed implements OnInit {
   
   protected memberService = inject(MemberService);
   private accountService = inject(AccountService);
-  // protected presenceService = inject(PresenceService);
+  protected presenceService = inject(PresenceService);
   protected likesService = inject(LikesService);
 
   
@@ -31,6 +31,16 @@ export class MemberDetailed implements OnInit {
   });
 
   protected hasLiked = computed(() => this.likesService.likeIds().includes(this.routeId()!));
+
+  protected isOnline = computed(() => {
+    const member = this.memberService.member();
+
+    if (!member) return false;
+
+    return this.presenceService
+      .onlineUsers()
+      .includes(member.id);
+  });
 
 
   constructor() {

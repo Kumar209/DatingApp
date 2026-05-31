@@ -4,7 +4,7 @@ export type User = {
     email: string;
     token: string;
     imageUrl?: string;
-    // roles: string[];
+    roles: string[];
 }
 
 export type LoginCreds = {
@@ -20,4 +20,11 @@ export type RegisterCreds = {
     dateOfBirth: string;
     city: string;
     country: string;
+}
+
+export class ManagedUserParams {
+  pageNumber = 1;
+  pageSize = 10;
+  orderBy = 'CreatedAsc';
+  role?: string;
 }

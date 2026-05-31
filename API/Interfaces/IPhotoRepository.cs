@@ -7,6 +7,7 @@ namespace API.Interfaces
     {
         Task<IReadOnlyList<PhotoForApprovalDto>> GetUnapprovedPhotos();
         Task<Photo?> GetPhotoById(int id);
+        Task<string?> GetMainPhotoByMemberId(string memberId);
         void RemovePhoto(Photo photo);
     }
 }
