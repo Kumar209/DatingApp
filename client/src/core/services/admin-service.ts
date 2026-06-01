@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ManagedUserParams, User } from '../../types/user';
-import { Photo } from '../../types/member';
+import { ManagedPhoto, Photo } from '../../types/member';
 import { PaginatedResult } from '../../types/pagination';
 import { tap } from 'rxjs';
 
@@ -38,7 +38,7 @@ export class AdminService {
   }
 
   getPhotosForApproval() {
-    return this.http.get<Photo[]>(this.baseUrl + 'admin/photos-to-moderate');
+    return this.http.get<ManagedPhoto[]>(this.baseUrl + 'admin/photos-to-moderate');
   }
 
   approvePhoto(photoId: number) {

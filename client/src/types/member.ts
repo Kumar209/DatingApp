@@ -20,6 +20,19 @@ export type Photo = {
   created: string
 }
 
+export type ManagedPhoto = {
+  id: number
+  displayName: string
+  url: string
+  publicId?: string
+  userId: string
+  isApproved: boolean
+  photoCreated: string
+  memberLastActive: string
+}
+
+
+
 export type EditableMember = {
   displayName: string;
   description?: string;

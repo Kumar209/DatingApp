@@ -27,6 +27,7 @@ public class PhotoRepository(AppDbContext context) : IPhotoRepository
     public async Task<IReadOnlyList<PhotoForApprovalDto>> GetUnapprovedPhotos()
     {
         return await context.Photos
+            .Include(p => p.Member)
             .IgnoreQueryFilters()
             .Where(p => p.IsApproved == false)
             .Select(u => new PhotoForApprovalDto
@@ -34,7 +35,10 @@ public class PhotoRepository(AppDbContext context) : IPhotoRepository
                 Id = u.Id,
                 UserId = u.MemberId,
                 Url = u.Url,
-                IsApproved = u.IsApproved
+                IsApproved = u.IsApproved,
+                DisplayName = u.Member.DisplayName,
+                PhotoCreated = u.Created,
+                MemberLastActive = u.Member.LastActive,
             }).ToListAsync();
     }
 
