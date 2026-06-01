@@ -9,7 +9,28 @@ namespace API.Data
     {
         public async Task<Member?> GetMemberByIdAsync(string id)
         {
-            return await context.Members.FindAsync(id);
+            //return await context.Members.FindAsync(id);
+            var member = await context.Members
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (member == null) return null;
+
+            if (!string.IsNullOrEmpty(member.ImageUrl))
+            {
+                var imageApproved = await context.Photos
+                    .AnyAsync(x =>
+                        x.MemberId == member.Id &&
+                        x.Url == member.ImageUrl &&
+                        x.IsApproved);
+
+                if (!imageApproved)
+                {
+                    member.ImageUrl = null;
+                }
+            }
+
+            return member;
         }
 
         public async Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams)
@@ -34,8 +55,31 @@ namespace API.Data
                 _ => query.OrderByDescending(x => x.LastActive)
             };
 
-            return await PaginationHelper.CreateAsync(query,
-                    memberParams.PageNumber, memberParams.PageSize);
+            //return await PaginationHelper.CreateAsync(query,
+            //        memberParams.PageNumber, memberParams.PageSize);
+
+            var result = await PaginationHelper.CreateAsync(
+                                   query.AsNoTracking(),
+                                   memberParams.PageNumber,
+                                   memberParams.PageSize);
+
+            foreach (var member in result.Items)
+            {
+                if (!string.IsNullOrEmpty(member.ImageUrl))
+                {
+                    var approved = await context.Photos.AnyAsync(x =>
+                        x.MemberId == member.Id &&
+                        x.Url == member.ImageUrl &&
+                        x.IsApproved);
+
+                    if (!approved)
+                    {
+                        member.ImageUrl = null;
+                    }
+                }
+            }
+
+            return result;
         }
 
         public async Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId, bool isCurrentUser)

@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 
 namespace API.Controllers
 {
-    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService) : BaseApiController
+    public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IPhotoRepository photoRepository) : BaseApiController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -47,7 +47,7 @@ namespace API.Controllers
 
             await SetRefreshTokenCookie(user);
 
-            return await user.ToDto(tokenService);
+            return await CreateUserDto(user);
         }
 
 
@@ -64,7 +64,7 @@ namespace API.Controllers
 
             await SetRefreshTokenCookie(user);
 
-            return await user.ToDto(tokenService);
+            return await CreateUserDto(user);
 
         }
 
@@ -83,7 +83,7 @@ namespace API.Controllers
 
             await SetRefreshTokenCookie(user);
 
-            return await user.ToDto(tokenService);
+            return await CreateUserDto(user);
         }
 
         private async Task SetRefreshTokenCookie(AppUser user)
@@ -118,6 +118,24 @@ namespace API.Controllers
             Response.Cookies.Delete("refreshToken");
 
             return Ok();
+        }
+
+        private async Task<UserDto> CreateUserDto(AppUser user)
+        {
+            var dto = await user.ToDto(tokenService);
+
+            if (!string.IsNullOrEmpty(dto.ImageUrl))
+            {
+                var approved = await photoRepository
+                    .IsMainPhotoApproved(user.Id, dto.ImageUrl);
+
+                if (!approved)
+                {
+                    dto.ImageUrl = null;
+                }
+            }
+
+            return dto;
         }
     }
 }

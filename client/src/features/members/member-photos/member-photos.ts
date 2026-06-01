@@ -72,7 +72,7 @@ export class MemberPhotos implements OnInit {
         this.photos.update(photos => [photo, ...photos]);
 
         // first uploaded photo becomes main
-        if (!this.memberService.member()?.imageUrl) {
+        if (photo.isApproved && !this.memberService.member()?.imageUrl) {
           this.setMainLocalPhoto(photo);
         }
 

@@ -46,4 +46,15 @@ public class PhotoRepository(AppDbContext context) : IPhotoRepository
     {
         context.Photos.Remove(photo);
     }
+
+    public async Task<bool> IsMainPhotoApproved(string memberId, string imageUrl)
+    {
+        return await context.Photos
+            .IgnoreQueryFilters()
+            .AnyAsync(x =>
+                x.MemberId == memberId &&
+                x.Url == imageUrl &&
+                x.IsApproved);
+    }
+
 }
