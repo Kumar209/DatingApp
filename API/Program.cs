@@ -156,7 +156,7 @@ app.MapControllers();
 
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/messages");
-//app.MapFallbackToController("Index", "Fallback");
+app.MapFallbackToController("Index", "Fallback");
 
 
 // Create a temporary dependency injection scope
@@ -182,7 +182,7 @@ try
 
     // Clear existing connection records
     // Useful when restarting app so stale SignalR/presence connections are removed
-    //await context.Connections.ExecuteDeleteAsync();
+    await context.Connections.ExecuteDeleteAsync();
 
     // Seed initial users into database if not already present
     // Helpful for development/testing/demo data

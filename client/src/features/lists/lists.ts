@@ -4,12 +4,10 @@ import { Member } from '../../types/member';
 import { MemberCard } from "../members/member-card/member-card";
 import { PaginatedResult } from '../../types/pagination';
 import { Paginator } from "../../shared/paginator/paginator";
-import { AgePipe } from '../../core/pipes/age-pipe';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lists',
-  imports: [MemberCard, Paginator, RouterLink, AgePipe],
+  imports: [MemberCard, Paginator],
   templateUrl: './lists.html',
   styleUrl: './lists.css'
 })

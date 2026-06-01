@@ -70,7 +70,7 @@ namespace API.Data
             var admin = new AppUser
             {
                 UserName = "crimsondeveloper@gmail.com",
-                Email = "crimsondeveloper@gmail.com",
+                Email = "c",
                 DisplayName = "Crimson Admin",
                 ImageUrl = "https://randomuser.me/api/portraits/women/53.jpg",
             };

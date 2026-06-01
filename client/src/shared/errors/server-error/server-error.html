@@ -52,7 +52,7 @@
         <p
           class="text-base-content/65 mt-4 max-w-lg text-sm leading-relaxed sm:text-base"
         >
-          {{ error?.message || 'An unexpected server error occurred while processing your request.' }}
+          {{ error.message || 'An unexpected server error occurred while processing your request.' }}
         </p>
 
         <!-- actions -->
@@ -66,7 +66,7 @@
             Return Home
           </button>
 
-          @if (error?.details) {
+          @if (error.details) {
             <button
               class="btn btn-primary h-11 rounded-xl px-6 text-sm font-semibold shadow-lg"
               (click)="detailsToggle()"
@@ -77,7 +77,7 @@
         </div>
 
         <!-- details -->
-        @if (showDetails && error?.details) {
+        @if (showDetails && error.details) {
           <div
             class="mt-8 w-full rounded-2xl border border-base-300 bg-base-200 p-4 text-left shadow-inner"
           >
