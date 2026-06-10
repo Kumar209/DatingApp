@@ -129,6 +129,9 @@ public class MessageHub(IUnitOfWork uow, IHubContext<PresenceHub> presenceHub) :
 
         if (await uow.Complete())
         {
+            message.Sender = sender;
+            message.Recipient = recipient;
+
             // Send new message instantly to all clients viewing this conversation.
             await Clients.Group(groupName).SendAsync("NewMessage", message.ToDto());
 
